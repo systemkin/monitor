@@ -1,20 +1,16 @@
 #include "mainwindow.h"
-#include "./ui_mainwindow.h"
 #include "deviceinfomodel.h"
-#include <QTcpSocket>
-#include <QJsonObject>
-#include <QJsonDocument>
-#include <QJsonArray>
-
-QByteArray MainWindow::buffer;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    host = "127.0.0.1";
+    port = 12345;
+
+    connect(this, &MainWindow::requestCompleted, this, &MainWindow::onRequestCompleted);
 
     ui->setupUi(this);
-
     ui->tableView->setModel(new DeviceInfoModel());
 }
 
@@ -22,28 +18,30 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-void MainWindow::test() {
-    QTcpSocket *socket = new QTcpSocket(this);
-    socket->connectToHost("127.0.0.1", 12345);
 
-    connect(socket, &QTcpSocket::connected, this, [socket]() {
-        QJsonObject requestObj;
-        requestObj["data"] = "test";
-        QJsonDocument requestDoc(requestObj);
-        socket->write(requestDoc.toJson());
+void MainWindow::makeJsonRequest(QJsonObject requestObject) {
+    QTcpSocket *socket = new QTcpSocket(this);
+    socket->connectToHost(host, port);
+    ui->label_2->appendPlainText(QString("connected to " + host));
+
+    connect(socket, &QTcpSocket::connected, this, [socket, requestObject]() {
+        QJsonDocument requestDoc(requestObject);
+        QByteArray requestData = requestDoc.toJson();
+        QByteArray lengthPrefix = QByteArray::number(requestData.size()) + "\n";
+
+        socket->write(lengthPrefix + requestData);
         socket->flush();
     });
 
-    connect(socket, &QTcpSocket::readyRead, this, [socket]() {
-        buffer.append(socket->readAll());
+    QByteArray *buffer = new QByteArray();
+    connect(socket, &QTcpSocket::readyRead, this, [socket, buffer]() {
+        buffer->append(socket->readAll());
     });
 
-    connect(socket, &QTcpSocket::disconnected, this, [this, socket]() {
-        QJsonObject firstItem = QJsonDocument::fromJson(buffer).object().value("data").toArray().at(0).toObject();
-        QString id = QString::number(firstItem.value("id").toInt());
-        ui->label->appendPlainText(QString("%1").arg(id));
+    connect(socket, &QTcpSocket::disconnected, this, [this, socket, requestObject, buffer]() {
 
-        buffer.clear();
+        emit requestCompleted(requestObject, QJsonDocument::fromJson(*buffer));
+
         socket->deleteLater();
     });
 
@@ -51,6 +49,32 @@ void MainWindow::test() {
 
 void MainWindow::on_pushButton_clicked()
 {
-    test();
+    ui->label_2->appendPlainText(QString("pushedButton "));
+    QJsonObject requestObj;
+    requestObj["requestType"] = "getStates";
+    makeJsonRequest(requestObj);
 }
 
+void MainWindow::onRequestCompleted(const QJsonObject &requestObject, const QJsonDocument &responseDoc) {
+    if (requestObject["requestType"] == "getStates") {
+        QString id = QString(responseDoc.object().value("data").toString());
+        ui->label->appendPlainText(id);
+
+    } else if (requestObject["requestType"] == "addDevice") {
+
+
+    } else if (requestObject["requestType"] == "editDevice") {
+
+
+    } else if (requestObject["requestType"] == "deleteDevice") {
+
+
+    } else if (requestObject["requestType"] == "changeDevices") {
+
+
+    } else if (requestObject["requestType"] == "showHistory") {
+
+
+    }
+
+}
