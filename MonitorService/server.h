@@ -23,9 +23,10 @@ public:
 private:
     int getState(QString Serial);
     QFile *file;
-    void respond(QTcpSocket *clientSocket, QJsonObject responseObj);
+    void respond(QTcpSocket *clientSocket, QJsonDocument responseDoc);
     void refreshStates();
     QSqlDatabase db;
+
 private slots:
     void onNewConnection();
 

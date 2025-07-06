@@ -9,16 +9,24 @@ QT += core gui network
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    adddeviceform.cpp \
     deviceinfomodel.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    showhistoryform.cpp \
+    showhistorymodel.cpp
 
 HEADERS += \
+    adddeviceform.h \
     deviceinfomodel.h \
-    mainwindow.h
+    mainwindow.h \
+    showhistoryform.h \
+    showhistorymodel.h
 
 FORMS += \
-    mainwindow.ui
+    adddeviceform.ui \
+    mainwindow.ui \
+    showhistoryform.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
