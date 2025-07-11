@@ -15,6 +15,8 @@
 #include <QTimer>
 #include <QFile>
 #include <QTextStream>
+#include "monitor_db.h"
+#include "refresher.h"
 
 class Server : public QTcpServer
 {
@@ -26,7 +28,9 @@ private:
     void respond(QTcpSocket *clientSocket, QJsonDocument responseDoc);
     void refreshStates();
     QSqlDatabase db;
-
+    MonitorDB* dbm;
+    QThread* refresherThread;
+    Refresher* refresher;
 private slots:
     void onNewConnection();
 

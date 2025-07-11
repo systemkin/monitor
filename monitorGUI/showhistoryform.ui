@@ -6,61 +6,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>880</width>
-    <height>526</height>
+    <width>1131</width>
+    <height>617</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QTableView" name="tableView">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>881</width>
-     <height>381</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton">
-   <property name="geometry">
-    <rect>
-     <x>790</x>
-     <y>390</y>
-     <width>80</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Запросить</string>
-   </property>
-  </widget>
-  <widget class="QDateTimeEdit" name="dateTimeEdit">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>390</y>
-     <width>241</width>
-     <height>41</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QDateTimeEdit" name="dateTimeEdit_2">
-   <property name="geometry">
-    <rect>
-     <x>330</x>
-     <y>390</y>
-     <width>221</width>
-     <height>41</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>390</y>
+     <x>10</x>
+     <y>570</y>
      <width>16</width>
      <height>41</height>
     </rect>
@@ -75,57 +32,75 @@
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QSpinBox" name="spinBox">
-   <property name="geometry">
-    <rect>
-     <x>740</x>
-     <y>390</y>
-     <width>31</width>
-     <height>41</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkBox">
+  <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>390</y>
-     <width>21</width>
-     <height>41</height>
+     <y>10</y>
+     <width>1111</width>
+     <height>591</height>
     </rect>
    </property>
-   <property name="text">
-    <string>С</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkBox_2">
-   <property name="geometry">
-    <rect>
-     <x>300</x>
-     <y>390</y>
-     <width>31</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="layoutDirection">
-    <enum>Qt::LeftToRight</enum>
-   </property>
-   <property name="text">
-    <string>По</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkBox_3">
-   <property name="geometry">
-    <rect>
-     <x>620</x>
-     <y>390</y>
-     <width>111</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Состояние</string>
-   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTableView" name="tableView"/>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QCheckBox" name="checkBox">
+        <property name="text">
+         <string>С</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDateTimeEdit" name="dateTimeEdit"/>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBox_2">
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="text">
+         <string>По</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDateTimeEdit" name="dateTimeEdit_2"/>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBox_3">
+        <property name="text">
+         <string>Состояние</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboBox"/>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QPushButton" name="pushButton_2">
+          <property name="text">
+           <string>Печать</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton">
+          <property name="text">
+           <string>Запросить</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>

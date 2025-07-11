@@ -1,5 +1,6 @@
 #include "deviceinfomodel.h"
 #include <QTextStream>
+#include <QBrush>
 
 DeviceInfoModel::DeviceInfoModel()
     : QAbstractTableModel()
@@ -41,12 +42,33 @@ QVariant DeviceInfoModel::data(const QModelIndex &index, int role) const {
             break;
         case 4:
             if (container[index.row()].type)
-                return QString("Файл");
-            else return QString("bash");
+                return QString("bash");
+            else return QString("Файл");
             break;
         case 5:
-            return container[index.row()].state;
+            switch(container[index.row()].state) {
+            case 0:
+                return QString("Неизвестно");
+                break;
+            case 1:
+                return QString("Не работает");
+                break;
+            case 2:
+                return QString("Авария");
+                break;
+            case 3:
+                return QString("Работает");
+                break;
+            }
             break;
+        }
+    }
+    if ((role == Qt::ForegroundRole) && (index.column() == 5))  {
+        switch(container[index.row()].state) {
+        case 0: return QBrush(Qt::gray);
+        case 1: return QBrush(QColor(255, 165, 0));
+        case 2: return QBrush(Qt::red);
+        case 3: return QBrush(Qt::green);
         }
     }
     return QVariant();
@@ -84,6 +106,7 @@ QVariant DeviceInfoModel::headerData(int section, Qt::Orientation orientation, i
             return QVariant();
         }
     }
+
     return QVariant();
 }
 std::vector<deviceInfo> DeviceInfoModel::getContainerCopy() {

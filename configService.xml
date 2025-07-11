@@ -1,0 +1,14 @@
+<config>
+    <database>
+        <host>127.0.0.1</host>
+	<name>monitorDB</name>
+	<username>postgres</username>
+	<password>root</password>
+        <port>5432</port>
+    </database>
+    <control>
+	<time>1000</time>
+	<bash>C:\\Users\\alexej\\Documents\\monitor\\MonitorService\\data.txt</bash>
+	<file>C:\\Users\\alexej\\Documents\\monitor\\MonitorService\\data.txt</file>
+    </control>
+</config>

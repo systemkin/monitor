@@ -1,4 +1,6 @@
 #include "showhistorymodel.h"
+#include <QDebug>
+#include <QBrush>
 
 showHistoryModel::showHistoryModel()
     : QAbstractTableModel()
@@ -33,15 +35,57 @@ QVariant showHistoryModel::data(const QModelIndex &index, int role) const {
             return QString(container[index.row()].name);
             break;
         case 2:
-            return QString::number(container[index.row()].prev_state);
+            switch(container[index.row()].prev_state) {
+            case 0:
+                return QString("Неизвестно");
+                break;
+            case 1:
+                return QString("Не работает");
+                break;
+            case 2:
+                return QString("Авария");
+                break;
+            case 3:
+                return QString("Работает");
+                break;
+            }
             break;
         case 3:
-            return QString::number(container[index.row()].new_state);
+            switch(container[index.row()].new_state) {
+            case 0:
+                return QString("Неизвестно");
+                break;
+            case 1:
+                return QString("Не работает");
+                break;
+            case 2:
+                return QString("Авария");
+                break;
+            case 3:
+                return QString("Работает");
+                break;
+            }
             break;
         case 4:
             return QString(container[index.row()].dateTime);
             break;
 
+        }
+    }
+    if ((role == Qt::ForegroundRole) && (index.column() == 2))  {
+        switch(container[index.row()].prev_state) {
+        case 0: return QBrush(Qt::gray);
+        case 1: return QBrush(QColor(255, 165, 0));
+        case 2: return QBrush(Qt::red);
+        case 3: return QBrush(Qt::green);
+        }
+    }
+    if ((role == Qt::ForegroundRole) && (index.column() == 3))  {
+        switch(container[index.row()].new_state) {
+        case 0: return QBrush(Qt::gray);
+        case 1: return QBrush(QColor(255, 165, 0));
+        case 2: return QBrush(Qt::red);
+        case 3: return QBrush(Qt::green);
         }
     }
     return QVariant();
@@ -76,4 +120,8 @@ QVariant showHistoryModel::headerData(int section, Qt::Orientation orientation, 
         }
     }
     return QVariant();
+}
+std::vector<historyItem> showHistoryModel::getContainerCopy() {
+    qDebug() << "3";
+    return container;
 }
