@@ -10,6 +10,8 @@ win32 {
 }
 unix {
     LIBS += $$PWD/../lib/debug/libmonitor_db.so.1.0.0
+    LIBS += $$PWD/../lib/debug/librefresherLib.so.1.0.0
+    LIBS += $$PWD/../lib/debug/libserverLib.so.1.0.0
     QMAKE_LFLAGS += -Wl,-rpath,/home/alexej/monitor/lib/debug
 
 }

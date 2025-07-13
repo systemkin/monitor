@@ -1,0 +1,716 @@
+[1mdiff --git a/MonitorService/MonitorService.pro b/MonitorService/MonitorService.pro[m
+[1mindex 9b0b205..638968f 100644[m
+[1m--- a/MonitorService/MonitorService.pro[m
+[1m+++ b/MonitorService/MonitorService.pro[m
+[36m@@ -10,6 +10,8 @@[m [mwin32 {[m
+ }[m
+ unix {[m
+     LIBS += $$PWD/../lib/debug/libmonitor_db.so.1.0.0[m
+[32m+[m[32m    LIBS += $$PWD/../lib/debug/librefresherLib.so.1.0.0[m[41m[m
+[32m+[m[32m    LIBS += $$PWD/../lib/debug/libserverLib.so.1.0.0[m[41m[m
+     QMAKE_LFLAGS += -Wl,-rpath,/home/alexej/monitor/lib/debug[m
+ [m
+ }[m
+[1mdiff --git a/MonitorService/build/Desktop-Debug/.qtc_clangd/.cache/clangd/index/refresherlib.h.B69631A43E85427B.idx b/MonitorService/build/Desktop-Debug/.qtc_clangd/.cache/clangd/index/refresherlib.h.B69631A43E85427B.idx[m
+[1mindex 1c07354..46dae47 100644[m
+Binary files a/MonitorService/build/Desktop-Debug/.qtc_clangd/.cache/clangd/index/refresherlib.h.B69631A43E85427B.idx and b/MonitorService/build/Desktop-Debug/.qtc_clangd/.cache/clangd/index/refresherlib.h.B69631A43E85427B.idx differ
+[1mdiff --git a/MonitorService/build/Desktop-Debug/.qtc_clangd/.cache/clangd/index/server.cpp.2DA9A5A0FE4813AF.idx b/MonitorService/build/Desktop-Debug/.qtc_clangd/.cache/clangd/index/server.cpp.2DA9A5A0FE4813AF.idx[m
+[1mindex 7910f24..75c0223 100644[m
+Binary files a/MonitorService/build/Desktop-Debug/.qtc_clangd/.cache/clangd/index/server.cpp.2DA9A5A0FE4813AF.idx and b/MonitorService/build/Desktop-Debug/.qtc_clangd/.cache/clangd/index/server.cpp.2DA9A5A0FE4813AF.idx differ
+[1mdiff --git a/MonitorService/build/Desktop-Debug/.qtc_clangd/.cache/clangd/index/server.h.4A72EDE895DE6EBE.idx b/MonitorService/build/Desktop-Debug/.qtc_clangd/.cache/clangd/index/server.h.4A72EDE895DE6EBE.idx[m
+[1mindex 2d9205f..571dd55 100644[m
+Binary files a/MonitorService/build/Desktop-Debug/.qtc_clangd/.cache/clangd/index/server.h.4A72EDE895DE6EBE.idx and b/MonitorService/build/Desktop-Debug/.qtc_clangd/.cache/clangd/index/server.h.4A72EDE895DE6EBE.idx differ
+[1mdiff --git a/MonitorService/build/Desktop-Debug/Makefile b/MonitorService/build/Desktop-Debug/Makefile[m
+[1mindex cb096e4..337b033 100644[m
+[1m--- a/MonitorService/build/Desktop-Debug/Makefile[m
+[1m+++ b/MonitorService/build/Desktop-Debug/Makefile[m
+[36m@@ -40,7 +40,7 @@[m [mDISTNAME      = MonitorService1.0.0[m
+ DISTDIR = /home/alexej/monitor/MonitorService/build/Desktop-Debug/.tmp/MonitorService1.0.0[m
+ LINK          = g++[m
+ LFLAGS        = -Wl,-rpath,/home/alexej/monitor/lib/debug -Wl,-rpath,/home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib[m
+[31m-LIBS          = $(SUBLIBS) /home/alexej/monitor/MonitorService/../lib/debug/libmonitor_db.so.1.0.0 /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Xml.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Widgets.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Gui.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Network.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Sql.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Core.so -lGL -lpthread   [m
+[32m+[m[32mLIBS          = $(SUBLIBS) /home/alexej/monitor/MonitorService/../lib/debug/libmonitor_db.so.1.0.0 /home/alexej/monitor/MonitorService/../lib/debug/librefresherLib.so.1.0.0 /home/alexej/monitor/MonitorService/../lib/debug/libserverLib.so.1.0.0 /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Xml.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Widgets.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Gui.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Network.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Sql.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Core.so -lGL -lpthread[m[41m   [m
+ AR            = ar cqs[m
+ RANLIB        = [m
+ SED           = sed[m
+[36m@@ -53,10 +53,8 @@[m [mOBJECTS_DIR   = ./[m
+ ####### Files[m
+ [m
+ SOURCES       = ../../main.cpp \[m
+[31m-		../../refresher.cpp \[m
+ 		../../server.cpp [m
+ OBJECTS       = main.o \[m
+[31m-		refresher.o \[m
+ 		server.o[m
+ DIST          = /Desktop/qt-everywhere-src-5.15.2/qtbase/mkspecs/features/spec_pre.prf \[m
+ 		/Desktop/qt-everywhere-src-5.15.2/qtbase/mkspecs/common/unix.conf \[m
+[36m@@ -366,7 +364,6 @@[m [mDIST          = /Desktop/qt-everywhere-src-5.15.2/qtbase/mkspecs/features/spec_p[m
+ 		/Desktop/qt-everywhere-src-5.15.2/qtbase/mkspecs/features/yacc.prf \[m
+ 		/Desktop/qt-everywhere-src-5.15.2/qtbase/mkspecs/features/lex.prf \[m
+ 		../../../../MonitorService.pro ../../server.h ../../main.cpp \[m
+[31m-		../../refresher.cpp \[m
+ 		../../server.cpp[m
+ QMAKE_TARGET  = MonitorService[m
+ DESTDIR       = [m
+[36m@@ -1012,7 +1009,7 @@[m [mdistdir: FORCE[m
+ 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/[m
+ 	$(COPY_FILE) --parents ../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/mkspecs/features/data/dummy.cpp $(DISTDIR)/[m
+ 	$(COPY_FILE) --parents ../../server.h $(DISTDIR)/[m
+[31m-	$(COPY_FILE) --parents ../../main.cpp ../../refresher.cpp ../../server.cpp $(DISTDIR)/[m
+[32m+[m	[32m$(COPY_FILE) --parents ../../main.cpp ../../server.cpp $(DISTDIR)/[m
+ [m
+ [m
+ clean: compiler_clean [m
+[36m@@ -1352,195 +1349,11 @@[m [mmain.o: ../../main.cpp ../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/inclu[m
+ 		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/qsqlrecord.h \[m
+ 		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/sql/kernel/qsqlrecord.h \[m
+ 		../../../lib/include/refresherlib.h \[m
+[31m-		../../../lib/include/refresherLib_global.h[m
+[32m+[m		[32m../../../lib/include/refresherLib_global.h \[m
+[32m+[m		[32m../../../lib/include/serverlib.h \[m
+[32m+[m		[32m../../../lib/include/serverLib_global.h[m
+ 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../../main.cpp[m
+ [m
+[31m-refresher.o: ../../refresher.cpp ../../refresher.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/QObject \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qobject.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/kernel/qobject.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qobjectdefs.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/kernel/qobjectdefs.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qnamespace.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qnamespace.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qglobal.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qglobal.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qconfig-bootstrapped.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qconfig-bootstrapped.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qconfig.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qconfig.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qtcore-config.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/qtcore-config.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qsystemdetection.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qsystemdetection.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qprocessordetection.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qprocessordetection.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qcompilerdetection.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qcompilerdetection.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qtypeinfo.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qtypeinfo.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qsysinfo.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qsysinfo.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qlogging.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qlogging.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qflags.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qflags.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qatomic.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/thread/qatomic.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qbasicatomic.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/thread/qbasicatomic.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qatomic_bootstrap.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/thread/qatomic_bootstrap.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qgenericatomic.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/thread/qgenericatomic.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qatomic_cxx11.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/thread/qatomic_cxx11.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qatomic_msvc.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/thread/qatomic_msvc.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qglobalstatic.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qglobalstatic.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qmutex.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/thread/qmutex.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qnumeric.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qnumeric.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qversiontagging.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qversiontagging.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qobjectdefs_impl.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/kernel/qobjectdefs_impl.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qstring.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qstring.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qchar.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qchar.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qbytearray.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qbytearray.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qrefcount.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qrefcount.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qarraydata.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qarraydata.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qstringliteral.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qstringliteral.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qstringalgorithms.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qstringalgorithms.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qstringview.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qstringview.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qstringbuilder.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qstringbuilder.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qlist.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qlist.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qalgorithms.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qalgorithms.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qiterator.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qiterator.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qhashfunctions.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qhashfunctions.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qpair.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qpair.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qvector.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qvector.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qcontainertools_impl.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qcontainertools_impl.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qpoint.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qpoint.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qbytearraylist.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qbytearraylist.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qstringlist.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qstringlist.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qregexp.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qregexp.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qstringmatcher.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qstringmatcher.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qcoreevent.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/kernel/qcoreevent.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qscopedpointer.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qscopedpointer.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qmetatype.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/kernel/qmetatype.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qvarlengtharray.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qvarlengtharray.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qcontainerfwd.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qcontainerfwd.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qobject_impl.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/kernel/qobject_impl.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/QTimer \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qtimer.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/kernel/qtimer.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qbasictimer.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/kernel/qbasictimer.h \[m
+[31m-		../../../lib/include/monitor_db.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/QSqlDatabase \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/qsqldatabase.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/sql/kernel/qsqldatabase.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/qtsqlglobal.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/sql/kernel/qtsqlglobal.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/qtsql-config.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/sql/qtsql-config.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/QMutex \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/QJsonObject \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qjsonobject.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/serialization/qjsonobject.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qjsonvalue.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/serialization/qjsonvalue.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qshareddata.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qshareddata.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qhash.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qhash.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qcborvalue.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/serialization/qcborvalue.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qdatetime.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/time/qdatetime.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qcborcommon.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/serialization/qcborcommon.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qdebug.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/io/qdebug.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qmap.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qmap.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qtextstream.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/serialization/qtextstream.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qiodevice.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/io/qiodevice.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qlocale.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qlocale.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qvariant.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/kernel/qvariant.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qset.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qset.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qcontiguouscache.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qcontiguouscache.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qsharedpointer.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qsharedpointer.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qsharedpointer_impl.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qsharedpointer_impl.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qregularexpression.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qregularexpression.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qurl.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/io/qurl.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qurlquery.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/io/qurlquery.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/quuid.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/plugin/quuid.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/QJsonArray \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qjsonarray.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/serialization/qjsonarray.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/QVariantList \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/QSqlError \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/qsqlerror.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/sql/kernel/qsqlerror.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/QSqlQuery \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/qsqlquery.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/sql/kernel/qsqlquery.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/QSqlRecord \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/qsqlrecord.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/sql/kernel/qsqlrecord.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/QFile \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qfile.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/io/qfile.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qfiledevice.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/io/qfiledevice.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/QProcess \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qprocess.h \[m
+[31m-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/io/qprocess.h[m
+[31m-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o refresher.o ../../refresher.cpp[m
+[31m-[m
+ server.o: ../../server.cpp ../../server.h \[m
+ 		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/QThread \[m
+ 		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qthread.h \[m
+[36m@@ -1831,6 +1644,8 @@[m [mserver.o: ../../server.cpp ../../server.h \[m
+ 		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/sql/kernel/qsqlrecord.h \[m
+ 		../../../lib/include/refresherlib.h \[m
+ 		../../../lib/include/refresherLib_global.h \[m
+[32m+[m		[32m../../../lib/include/serverlib.h \[m
+[32m+[m		[32m../../../lib/include/serverLib_global.h \[m
+ 		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtXml/QDomDocument \[m
+ 		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtXml/qdom.h \[m
+ 		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/xml/dom/qdom.h \[m
+[1mdiff --git a/MonitorService/build/Desktop-Debug/MonitorService b/MonitorService/build/Desktop-Debug/MonitorService[m
+[1mindex 239e670..26b1c2b 100644[m
+Binary files a/MonitorService/build/Desktop-Debug/MonitorService and b/MonitorService/build/Desktop-Debug/MonitorService differ
+[1mdiff --git a/MonitorService/build/Desktop-Debug/main.o b/MonitorService/build/Desktop-Debug/main.o[m
+[1mindex bf4588f..622d972 100644[m
+Binary files a/MonitorService/build/Desktop-Debug/main.o and b/MonitorService/build/Desktop-Debug/main.o differ
+[1mdiff --git a/MonitorService/build/Desktop-Debug/server.o b/MonitorService/build/Desktop-Debug/server.o[m
+[1mindex 3f8bce6..d0b7753 100644[m
+Binary files a/MonitorService/build/Desktop-Debug/server.o and b/MonitorService/build/Desktop-Debug/server.o differ
+[1mdiff --git a/MonitorService/server.cpp b/MonitorService/server.cpp[m
+[1mindex 4025cdb..f2fda09 100644[m
+[1m--- a/MonitorService/server.cpp[m
+[1m+++ b/MonitorService/server.cpp[m
+[36m@@ -4,9 +4,6 @@[m
+ #include <QDomDocument>[m
+ [m
+ Server::Server(QObject *parent) : QTcpServer(parent) {[m
+[31m-    connect(this, &QTcpServer::newConnection, this, &Server::onNewConnection);[m
+[31m-[m
+[31m-[m
+ [m
+     QFile config("/home/alexej/monitor/configService.xml");[m
+     if (!config.open(QIODevice::ReadOnly)) {[m
+[36m@@ -77,16 +74,8 @@[m [mServer::Server(QObject *parent) : QTcpServer(parent) {[m
+         return;[m
+     }[m
+ [m
+[31m-    db = QSqlDatabase::addDatabase("QPSQL");[m
+[31m-    db.setHostName(host);[m
+[31m-    db.setDatabaseName(name);[m
+[31m-    db.setUserName(username);[m
+[31m-    db.setPassword(password);[m
+[31m-    db.setPort(port);[m
+ [m
+ [m
+[31m-    dbm = MonitorDB::getInstance(host, name, username, password, port);[m
+[31m-[m
+ [m
+ [m
+     QDomElement control = root.firstChildElement("control");[m
+[36m@@ -123,6 +112,15 @@[m [mServer::Server(QObject *parent) : QTcpServer(parent) {[m
+         return;[m
+     }[m
+ [m
+[32m+[m[32m    QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");[m[41m[m
+[32m+[m[32m    db.setHostName(host);[m[41m[m
+[32m+[m[32m    db.setDatabaseName(name);[m[41m[m
+[32m+[m[32m    db.setUserName(username);[m[41m[m
+[32m+[m[32m    db.setPassword(password);[m[41m[m
+[32m+[m[32m    db.setPort(port);[m[41m[m
+[32m+[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    dbm = MonitorDB::getInstance(host, name, username, password, port);[m[41m[m
+ [m
+     QFile* file = new QFile(filePath);[m
+     QFile* bash = new QFile(bashPath);[m
+[36m@@ -144,238 +142,12 @@[m [mServer::Server(QObject *parent) : QTcpServer(parent) {[m
+     connect(refresherThread, &QThread::finished, refresher, &Refresher::stop);[m
+ [m
+     refresherThread->start();[m
+[31m-}[m
+[31m-void Server::onNewConnection() {[m
+[31m-    QTcpSocket *clientSocket = nextPendingConnection();[m
+[31m-    connect(clientSocket, &QTcpSocket::disconnected, clientSocket, &QTcpSocket::deleteLater);[m
+[31m-    QByteArray *buffer = new QByteArray();[m
+[31m-    connect(clientSocket, &QTcpSocket::readyRead, this, [this, clientSocket, buffer]() {[m
+[31m-[m
+[31m-        buffer->append(clientSocket->readAll());[m
+[31m-        while (true) {[m
+[31m-[m
+[31m-            int newlineIndex = buffer->indexOf('\n');[m
+[31m-            if (newlineIndex == -1) {[m
+[31m-                break;[m
+[31m-            }[m
+[31m-[m
+[31m-            QByteArray lengthPrefix = buffer->left(newlineIndex);[m
+[31m-[m
+[31m-            int messageLength = lengthPrefix.toInt();[m
+[31m-[m
+[31m-            if (buffer->size() < newlineIndex + 1 + messageLength) {[m
+[31m-                break;[m
+[31m-            }[m
+[31m-[m
+[31m-            QByteArray messageData = buffer->mid(newlineIndex + 1, messageLength);[m
+[31m-            buffer->clear();[m
+[31m-            QJsonObject requestObject = QJsonDocument::fromJson(messageData).object();[m
+[31m-[m
+[31m-[m
+[31m-            if (requestObject["requestType"] == "getStates") {[m
+[31m-                QJsonObject result = dbm->executeQuery("SELECT devices.serial, devices.name, devices.description, devices.type, states.state, devices.id FROM states INNER JOIN devices ON devices.id = device_id");[m
+[31m-                if (result["status"] != "success") {[m
+[31m-                    qDebug() << "Can not execute query. message: " << result["message"];[m
+[31m-                    respond(clientSocket, QJsonDocument(result));[m
+[31m-                    return;[m
+[31m-                }[m
+[31m-                QJsonDocument responseDoc(result);[m
+[31m-                respond(clientSocket, responseDoc);[m
+[31m-[m
+[31m-            } else if (requestObject["requestType"] == "addDevice") {[m
+[31m-                QJsonObject requestData = requestObject["requestData"].toObject();[m
+[31m-                QString serial = requestData["serial"].toString();[m
+[31m-                QString name = requestData["name"].toString();[m
+[31m-                QString description = requestData["description"].toString();[m
+[31m-                bool type = requestData["type"].toBool();[m
+[31m-                QJsonObject result = dbm->executeQuery("SELECT id FROM devices WHERE serial = ?", {serial});[m
+[31m-                if (result["status"] != "success") {[m
+[31m-                    qDebug() << "Can not execute query. message: " << result["message"];[m
+[31m-                    respond(clientSocket, QJsonDocument(result));[m
+[31m-                    return;[m
+[31m-                }[m
+[31m-                if (result["data"].toArray().size() != 0) {[m
+[31m-                    QJsonObject response;[m
+[31m-                    qDebug() << "Already exists while creating " + serial;[m
+[31m-                    response["status"] = "fail";[m
+[31m-                    response["message"] = "Already exists";[m
+[31m-                    QJsonDocument responseDoc(response);[m
+[31m-                    respond(clientSocket, responseDoc);[m
+[31m-                    return;[m
+[31m-                }[m
+[31m-[m
+[31m-                QJsonObject insertResult = dbm->executeQuery("INSERT INTO devices (serial, name, description, type) VALUES (?, ?, ?, ?)", {serial, name, description, type});[m
+[31m-                if (insertResult["status"] != "success") {[m
+[31m-                    qDebug() << "Can not execute query. message: " << insertResult["message"];[m
+[31m-                    respond(clientSocket, QJsonDocument(insertResult));[m
+[31m-                    return;[m
+[31m-                }[m
+[31m-                QJsonDocument responseDoc(insertResult);[m
+[31m-                respond(clientSocket, responseDoc);[m
+[31m-[m
+[31m-            } else if (requestObject["requestType"] == "editDevice") {[m
+[31m-                db.transaction();[m
+[31m-                QJsonObject requestData = requestObject["requestData"].toObject();[m
+[31m-                int id = requestData["id"].toInt();[m
+[31m-                QString serial = requestData["serial"].toString();[m
+[31m-                QString name = requestData["name"].toString();[m
+[31m-                QString description = requestData["description"].toString();[m
+[31m-                bool type = requestData["type"].toBool();[m
+ [m
+[31m-                QJsonObject result = dbm->executeQuery("SELECT id FROM devices WHERE serial = ? AND id != ?", {serial, id});[m
+[31m-                if (result["status"] != "success") {[m
+[31m-                    qDebug() << "Can not execute query. message: " << result["message"];[m
+[31m-                    respond(clientSocket, QJsonDocument(result));[m
+[31m-                    return;[m
+[31m-                }[m
+[31m-                if (!result["data"].toArray().empty()) {[m
+[31m-                    QJsonObject response;[m
+[31m-                    qDebug() << "Already exists with same serial while updating";[m
+[31m-                    response["status"] = "fail";[m
+[31m-                    response["message"] = "Already exists with same serial";[m
+[31m-                    QJsonDocument responseDoc(response);[m
+[31m-                    respond(clientSocket, responseDoc);[m
+[31m-                    return;[m
+[31m-                }[m
+[31m-                QJsonObject updateResult = dbm->executeQuery("UPDATE devices SET serial = ?, name = ?, description = ?, type = ? WHERE id = ? ", {serial, name, description, type, id});[m
+[31m-                if (updateResult["status"] != "success") {[m
+[31m-                    qDebug() << "Can not execute query. message: " << updateResult["message"];[m
+[31m-                    respond(clientSocket, QJsonDocument(updateResult));[m
+[31m-                    return;[m
+[31m-                }[m
+[31m-                QJsonDocument responseDoc(updateResult);[m
+[31m-                respond(clientSocket, responseDoc);[m
+ [m
+[31m-            } else if (requestObject["requestType"] == "changeDevices") {[m
+[31m-                QJsonObject response;[m
+[32m+[m[32m    serviceThread = new QThread(this);[m[41m[m
+[32m+[m[32m    service = new Service(dbm);[m[41m[m
+[32m+[m[32m    service->moveToThread(serviceThread);[m[41m[m
+[32m+[m[32m    serviceThread->start();[m[41m[m
+ [m
+[31m-                dbm->beginTransaction();[m
+ [m
+[31m-                QJsonObject result = dbm->executeQuery("DELETE FROM devices");[m
+[31m-                if (result["status"] != "success") {[m
+[31m-                    qDebug() << "Can not execute query. message: " << result["message"];[m
+[31m-                    respond(clientSocket, QJsonDocument(result));[m
+[31m-                    return;[m
+[31m-                }[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-                QJsonArray jsonArray = requestObject["requestData"].toArray();[m
+[31m-                for (const QJsonValue &value : std::as_const(jsonArray)) {[m
+[31m-[m
+[31m-                    QJsonObject device = value.toObject();[m
+[31m-[m
+[31m-                    QJsonObject insertResult = dbm->executeQuery("INSERT INTO devices (serial, name, description, type) VALUES (?, ?, ?, ?)", {device.value("serial").toString(), device.value("name").toString(), device.value("description").toString(), device.value("type").toBool()});[m
+[31m-                    if (insertResult["status"] != "success") {[m
+[31m-                        qDebug() << "Can not execute query. message: " << insertResult["message"];[m
+[31m-                        dbm->rollbackTransaction();[m
+[31m-                        respond(clientSocket, QJsonDocument(insertResult));[m
+[31m-                        return;[m
+[31m-                    }[m
+[31m-                    qDebug() << "success";[m
+[31m-[m
+[31m-                }[m
+[31m-[m
+[31m-                if(!dbm->commitTransaction()) {[m
+[31m-                    dbm->rollbackTransaction();[m
+[31m-                    QJsonObject response;[m
+[31m-                    qDebug() << "Cant commit, db closed";[m
+[31m-                    response["status"] = "fail";[m
+[31m-                    response["message"] = "Db closed";[m
+[31m-                    QJsonDocument responseDoc(response);[m
+[31m-                    respond(clientSocket, responseDoc);[m
+[31m-                    return;[m
+[31m-                }[m
+[31m-[m
+[31m-                respond(clientSocket, QJsonDocument(response));[m
+[31m-[m
+[31m-            } else if (requestObject["requestType"] == "showHistory") {[m
+[31m-                QJsonObject response;[m
+[31m-                QString sql =[m
+[31m-                    "SELECT "[m
+[31m-                    "   devices.serial, "[m
+[31m-                    "   devices.name, "[m
+[31m-                    "   log.prev_state, "[m
+[31m-                    "   log.new_state, "[m
+[31m-                    "   log.time "[m
+[31m-                    "FROM log "[m
+[31m-                    "INNER JOIN devices ON devices.id = log.device_id "[m
+[31m-                    "WHERE 1=1";[m
+[31m-[m
+[31m-                QVariantList params;[m
+[31m-[m
+[31m-                if (requestObject.contains("state")) {[m
+[31m-                    sql += " AND (log.prev_state = ? OR log.new_state = ?)";[m
+[31m-                    params << requestObject["state"].toInt() << requestObject["state"].toInt();[m
+[31m-                }[m
+[31m-                if (requestObject.contains("low")) {[m
+[31m-                    sql += " AND log.time > ?";[m
+[31m-                    params << QDateTime::fromString(requestObject["low"].toString(), Qt::ISODate);[m
+[31m-                }[m
+[31m-                if (requestObject.contains("high")) {[m
+[31m-                    sql += " AND log.time < ?";[m
+[31m-                    params << QDateTime::fromString(requestObject["high"].toString(), Qt::ISODate);[m
+[31m-                }[m
+[31m-                sql += " ORDER BY log.time";[m
+[31m-[m
+[31m-                QJsonObject result = dbm->executeQuery(sql, params);[m
+[31m-[m
+[31m-                if (result["status"] != "success") {[m
+[31m-                    qDebug() << "Query failed:" << result["message"];[m
+[31m-                    response["status"] = "fail";[m
+[31m-                } else {[m
+[31m-                    response["status"] = "success";[m
+[31m-                    response["data"] = result["data"];[m
+[31m-[m
+[31m-                }[m
+[31m-[m
+[31m-                QJsonDocument responseDoc(response);[m
+[31m-                respond(clientSocket, responseDoc);[m
+[31m-            } else if (requestObject["requestType"] == "deleteDevice") {[m
+[31m-[m
+[31m-                QJsonObject response;[m
+[31m-[m
+[31m-                QJsonObject requestData = requestObject["requestData"].toObject();[m
+[31m-                int id = requestData["id"].toInt();[m
+[31m-[m
+[31m-                QSqlQuery query;[m
+[31m-[m
+[31m-                QJsonObject result = dbm->executeQuery("DELETE FROM devices WHERE id = ?", {id});[m
+[31m-                if (result["status"] != "success") {[m
+[31m-                    qDebug() << "Can not execute query. message: " << result["message"];[m
+[31m-                    respond(clientSocket, QJsonDocument(result));[m
+[31m-                    return;[m
+[31m-                }[m
+[31m-                if (result["rowsAffected"].toInt() == 0) {[m
+[31m-                    qDebug() << "Already deleted " + QString::number(id);[m
+[31m-                    response["status"] = "fail";[m
+[31m-                    response["message"] = "Already deleted";[m
+[31m-                    QJsonDocument responseDoc(response);[m
+[31m-                    respond(clientSocket, responseDoc);[m
+[31m-                    return;[m
+[31m-                }[m
+[31m-                response["status"] = "success";[m
+[31m-[m
+[31m-                QJsonDocument responseDoc(response);[m
+[31m-                respond(clientSocket, responseDoc);[m
+[31m-[m
+[31m-            }[m
+[31m-[m
+[31m-        }[m
+[31m-[m
+[31m-    });[m
+[31m-[m
+[31m-}[m
+[31m-[m
+[31m-void Server::respond(QTcpSocket *clientSocket, QJsonDocument responseDoc) {[m
+[31m-;[m
+[31m-    QByteArray responseData = responseDoc.toJson();[m
+[31m-[m
+[31m-    const int chunkSize = 1024;[m
+[31m-    for (int i = 0; i < responseData.size(); i += chunkSize) {[m
+[31m-        QByteArray chunk = responseData.mid(i, chunkSize);[m
+[31m-        clientSocket->write(chunk);[m
+[31m-        clientSocket->waitForBytesWritten();[m
+[31m-    }[m
+[31m-    clientSocket->disconnectFromHost();[m
+ }[m
+[1mdiff --git a/MonitorService/server.h b/MonitorService/server.h[m
+[1mindex ca72deb..c4dab2a 100644[m
+[1m--- a/MonitorService/server.h[m
+[1m+++ b/MonitorService/server.h[m
+[36m@@ -18,21 +18,19 @@[m
+ #include <QTextStream>[m
+ #include "monitor_db.h"[m
+ #include "refresherlib.h"[m
+[32m+[m[32m#include "serverlib.h"[m[41m[m
+ [m
+ class Server : public QTcpServer[m
+ {[m
+ public:[m
+     Server(QObject *parent = nullptr);[m
+[31m-private:[m
+[31m-    int getState(QString Serial);[m
+[31m-    void respond(QTcpSocket *clientSocket, QJsonDocument responseDoc);[m
+[31m-    void refreshStates();[m
+[31m-    QSqlDatabase db;[m
+[31m-    MonitorDB* dbm;[m
+     QThread* refresherThread;[m
+     Refresher* refresher;[m
+[31m-private slots:[m
+[31m-    void onNewConnection();[m
+[32m+[m[41m[m
+[32m+[m[32m    QThread* serviceThread;[m[41m[m
+[32m+[m[32m    Service* service;[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    MonitorDB* dbm;[m[41m[m
+ [m
+ };[m
+ [m
+[1mdiff --git a/lib/debug/librefresherLib.so.1.0.0 b/lib/debug/librefresherLib.so.1.0.0[m
+[1mindex 90d9b81..04eed9c 100644[m
+Binary files a/lib/debug/librefresherLib.so.1.0.0 and b/lib/debug/librefresherLib.so.1.0.0 differ
+[1mdiff --git a/lib/include/refresherlib.h b/lib/include/refresherlib.h[m
+[1mindex 68f7f17..766d9ac 100644[m
+[1m--- a/lib/include/refresherlib.h[m
+[1m+++ b/lib/include/refresherlib.h[m
+[36m@@ -9,7 +9,7 @@[m
+ [m
+ class REFRESHERLIB_EXPORT  Refresher : public QObject[m
+ {[m
+[31m-Q_OBJECT[m
+[32m+[m[32m    Q_OBJECT[m
+ public:[m
+     explicit Refresher(MonitorDB* dbm, QFile* dataFile, QFile* bashFile,QObject* parent = nullptr);[m
+     void start(int time);[m
+[1mdiff --git a/refresherLib/build/qt5-Debug/librefresherLib.so.1.0.0 b/refresherLib/build/qt5-Debug/librefresherLib.so.1.0.0[m
+[1mindex 90d9b81..04eed9c 100644[m
+Binary files a/refresherLib/build/qt5-Debug/librefresherLib.so.1.0.0 and b/refresherLib/build/qt5-Debug/librefresherLib.so.1.0.0 differ
+[1mdiff --git a/refresherLib/build/qt5-Debug/moc_refresherlib.o b/refresherLib/build/qt5-Debug/moc_refresherlib.o[m
+[1mindex ee04f25..b84d77a 100644[m
+Binary files a/refresherLib/build/qt5-Debug/moc_refresherlib.o and b/refresherLib/build/qt5-Debug/moc_refresherlib.o differ
+[1mdiff --git a/refresherLib/build/qt5-Debug/refresherlib.o b/refresherLib/build/qt5-Debug/refresherlib.o[m
+[1mindex f9a703a..fb17308 100644[m
+Binary files a/refresherLib/build/qt5-Debug/refresherlib.o and b/refresherLib/build/qt5-Debug/refresherlib.o differ
+[1mdiff --git a/refresherLib/refresherlib.cpp b/refresherLib/refresherlib.cpp[m
+[1mindex 74affaa..de0757a 100644[m
+[1m--- a/refresherLib/refresherlib.cpp[m
+[1m+++ b/refresherLib/refresherlib.cpp[m
+[36m@@ -20,6 +20,8 @@[m [mvoid Refresher::start(int time)[m
+ [m
+ void Refresher::stop()[m
+ {[m
+[32m+[m[32m    dataFile->close();[m
+[32m+[m[32m    bashFile->close();[m
+     timer->stop();[m
+ }[m
+ [m
+[1mdiff --git a/refresherLib/refresherlib.h b/refresherLib/refresherlib.h[m
+[1mindex 68f7f17..766d9ac 100644[m
+[1m--- a/refresherLib/refresherlib.h[m
+[1m+++ b/refresherLib/refresherlib.h[m
+[36m@@ -9,7 +9,7 @@[m
+ [m
+ class REFRESHERLIB_EXPORT  Refresher : public QObject[m
+ {[m
+[31m-Q_OBJECT[m
+[32m+[m[32m    Q_OBJECT[m
+ public:[m
+     explicit Refresher(MonitorDB* dbm, QFile* dataFile, QFile* bashFile,QObject* parent = nullptr);[m
+     void start(int time);[m
+[1mdiff --git a/serverLib/build/qt5-Debug/libserverLib.so.1.0.0 b/serverLib/build/qt5-Debug/libserverLib.so.1.0.0[m
+[1mindex 630b38d..c26c4ee 100644[m
+Binary files a/serverLib/build/qt5-Debug/libserverLib.so.1.0.0 and b/serverLib/build/qt5-Debug/libserverLib.so.1.0.0 differ
+[1mdiff --git a/serverLib/build/qt5-Debug/serverlib.o b/serverLib/build/qt5-Debug/serverlib.o[m
+[1mindex 4929638..75391c3 100644[m
+Binary files a/serverLib/build/qt5-Debug/serverlib.o and b/serverLib/build/qt5-Debug/serverlib.o differ
+[1mdiff --git a/serverLib/serverlib.cpp b/serverLib/serverlib.cpp[m
+[1mindex 7f19f5c..c5a1dba 100644[m
+[1m--- a/serverLib/serverlib.cpp[m
+[1m+++ b/serverLib/serverlib.cpp[m
+[36m@@ -3,22 +3,14 @@[m
+ [m
+ #include <QDomDocument>[m
+ [m
+[31m-Server::Server(QString host, QString username, QString password, QString dbname, int port, QObject *parent) : QTcpServer(parent) {[m
+[31m-    connect(this, &QTcpServer::newConnection, this, &Server::onNewConnection);[m
+[32m+[m[32mService::Service(MonitorDB* dbm, QObject *parent) : QTcpServer(parent) {[m
+[32m+[m[32m    connect(this, &QTcpServer::newConnection, this, &Service::onNewConnection);[m
+ [m
+ [m
+[31m-    db = QSqlDatabase::addDatabase("QPSQL");[m
+[31m-    db.setHostName(host);[m
+[31m-    db.setDatabaseName(dbname);[m
+[31m-    db.setUserName(username);[m
+[31m-    db.setPassword(password);[m
+[31m-    db.setPort(port);[m
+[31m-[m
+[31m-[m
+[31m-    dbm = MonitorDB::getInstance(host, dbname, username, password, port);[m
+[32m+[m[32m    this->dbm = dbm;[m
+ [m
+ }[m
+[31m-void Server::onNewConnection() {[m
+[32m+[m[32mvoid Service::onNewConnection() {[m
+     QTcpSocket *clientSocket = nextPendingConnection();[m
+     connect(clientSocket, &QTcpSocket::disconnected, clientSocket, &QTcpSocket::deleteLater);[m
+     QByteArray *buffer = new QByteArray();[m
+[36m@@ -238,7 +230,7 @@[m [mvoid Server::onNewConnection() {[m
+ [m
+ }[m
+ [m
+[31m-void Server::respond(QTcpSocket *clientSocket, QJsonDocument responseDoc) {[m
+[32m+[m[32mvoid Service::respond(QTcpSocket *clientSocket, QJsonDocument responseDoc) {[m
+     ;[m
+     QByteArray responseData = responseDoc.toJson();[m
+ [m
+[1mdiff --git a/serverLib/serverlib.h b/serverLib/serverlib.h[m
+[1mindex e89f16d..1884013 100644[m
+[1m--- a/serverLib/serverlib.h[m
+[1m+++ b/serverLib/serverlib.h[m
+[36m@@ -20,10 +20,10 @@[m
+ #include "monitor_db.h"[m
+ [m
+ [m
+[31m-class SERVERLIB_EXPORT Server :  public QTcpServer[m
+[32m+[m[32mclass SERVERLIB_EXPORT Service :  public QTcpServer[m
+ {[m
+ public:[m
+[31m-    Server(QString host, QString username, QString password, QString dbname, int port,  QObject *parent = nullptr);[m
+[32m+[m[32m    Service (MonitorDB* dbm, QObject *parent = nullptr);[m
+ private:[m
+     int getState(QString Serial);[m
+     void respond(QTcpSocket *clientSocket, QJsonDocument responseDoc);[m

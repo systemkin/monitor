@@ -20,6 +20,8 @@ void Refresher::start(int time)
 
 void Refresher::stop()
 {
+    dataFile->close();
+    bashFile->close();
     timer->stop();
 }
 

@@ -3,22 +3,14 @@
 
 #include <QDomDocument>
 
-Server::Server(QString host, QString username, QString password, QString dbname, int port, QObject *parent) : QTcpServer(parent) {
-    connect(this, &QTcpServer::newConnection, this, &Server::onNewConnection);
+Service::Service(MonitorDB* dbm, QObject *parent) : QTcpServer(parent) {
+    connect(this, &QTcpServer::newConnection, this, &Service::onNewConnection);
 
 
-    db = QSqlDatabase::addDatabase("QPSQL");
-    db.setHostName(host);
-    db.setDatabaseName(dbname);
-    db.setUserName(username);
-    db.setPassword(password);
-    db.setPort(port);
-
-
-    dbm = MonitorDB::getInstance(host, dbname, username, password, port);
+    this->dbm = dbm;
 
 }
-void Server::onNewConnection() {
+void Service::onNewConnection() {
     QTcpSocket *clientSocket = nextPendingConnection();
     connect(clientSocket, &QTcpSocket::disconnected, clientSocket, &QTcpSocket::deleteLater);
     QByteArray *buffer = new QByteArray();
@@ -238,7 +230,7 @@ void Server::onNewConnection() {
 
 }
 
-void Server::respond(QTcpSocket *clientSocket, QJsonDocument responseDoc) {
+void Service::respond(QTcpSocket *clientSocket, QJsonDocument responseDoc) {
     ;
     QByteArray responseData = responseDoc.toJson();
 

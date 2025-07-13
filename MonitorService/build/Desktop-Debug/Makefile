@@ -40,7 +40,7 @@ DISTNAME      = MonitorService1.0.0
 DISTDIR = /home/alexej/monitor/MonitorService/build/Desktop-Debug/.tmp/MonitorService1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/home/alexej/monitor/lib/debug -Wl,-rpath,/home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib
-LIBS          = $(SUBLIBS) /home/alexej/monitor/MonitorService/../lib/debug/libmonitor_db.so.1.0.0 /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Xml.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Widgets.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Gui.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Network.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Sql.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Core.so -lGL -lpthread   
+LIBS          = $(SUBLIBS) /home/alexej/monitor/MonitorService/../lib/debug/libmonitor_db.so.1.0.0 /home/alexej/monitor/MonitorService/../lib/debug/librefresherLib.so.1.0.0 /home/alexej/monitor/MonitorService/../lib/debug/libserverLib.so.1.0.0 /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Xml.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Widgets.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Gui.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Network.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Sql.so /home/alexej/Desktop/qt-everywhere-src-5.15.2/qtbase/lib/libQt5Core.so -lGL -lpthread   
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -53,10 +53,8 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../../main.cpp \
-		../../refresher.cpp \
 		../../server.cpp 
 OBJECTS       = main.o \
-		refresher.o \
 		server.o
 DIST          = /Desktop/qt-everywhere-src-5.15.2/qtbase/mkspecs/features/spec_pre.prf \
 		/Desktop/qt-everywhere-src-5.15.2/qtbase/mkspecs/common/unix.conf \
@@ -366,7 +364,6 @@ DIST          = /Desktop/qt-everywhere-src-5.15.2/qtbase/mkspecs/features/spec_p
 		/Desktop/qt-everywhere-src-5.15.2/qtbase/mkspecs/features/yacc.prf \
 		/Desktop/qt-everywhere-src-5.15.2/qtbase/mkspecs/features/lex.prf \
 		../../../../MonitorService.pro ../../server.h ../../main.cpp \
-		../../refresher.cpp \
 		../../server.cpp
 QMAKE_TARGET  = MonitorService
 DESTDIR       = 
@@ -1012,7 +1009,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/mkspecs/features/data/dummy.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../../server.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../main.cpp ../../refresher.cpp ../../server.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../main.cpp ../../server.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -1352,194 +1349,10 @@ main.o: ../../main.cpp ../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/inclu
 		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/qsqlrecord.h \
 		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/sql/kernel/qsqlrecord.h \
 		../../../lib/include/refresherlib.h \
-		../../../lib/include/refresherLib_global.h
+		../../../lib/include/refresherLib_global.h \
+		../../../lib/include/serverlib.h \
+		../../../lib/include/serverLib_global.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../../main.cpp
-
-refresher.o: ../../refresher.cpp ../../refresher.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/QObject \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qobject.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/kernel/qobject.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qobjectdefs.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/kernel/qobjectdefs.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qnamespace.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qnamespace.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qglobal.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qglobal.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qconfig-bootstrapped.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qconfig-bootstrapped.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qconfig.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qconfig.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qtcore-config.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/qtcore-config.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qsystemdetection.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qsystemdetection.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qprocessordetection.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qprocessordetection.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qcompilerdetection.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qcompilerdetection.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qtypeinfo.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qtypeinfo.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qsysinfo.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qsysinfo.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qlogging.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qlogging.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qflags.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qflags.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qatomic.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/thread/qatomic.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qbasicatomic.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/thread/qbasicatomic.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qatomic_bootstrap.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/thread/qatomic_bootstrap.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qgenericatomic.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/thread/qgenericatomic.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qatomic_cxx11.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/thread/qatomic_cxx11.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qatomic_msvc.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/thread/qatomic_msvc.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qglobalstatic.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qglobalstatic.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qmutex.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/thread/qmutex.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qnumeric.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qnumeric.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qversiontagging.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/global/qversiontagging.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qobjectdefs_impl.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/kernel/qobjectdefs_impl.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qstring.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qstring.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qchar.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qchar.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qbytearray.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qbytearray.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qrefcount.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qrefcount.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qarraydata.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qarraydata.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qstringliteral.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qstringliteral.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qstringalgorithms.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qstringalgorithms.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qstringview.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qstringview.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qstringbuilder.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qstringbuilder.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qlist.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qlist.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qalgorithms.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qalgorithms.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qiterator.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qiterator.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qhashfunctions.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qhashfunctions.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qpair.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qpair.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qvector.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qvector.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qcontainertools_impl.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qcontainertools_impl.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qpoint.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qpoint.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qbytearraylist.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qbytearraylist.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qstringlist.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qstringlist.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qregexp.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qregexp.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qstringmatcher.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qstringmatcher.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qcoreevent.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/kernel/qcoreevent.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qscopedpointer.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qscopedpointer.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qmetatype.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/kernel/qmetatype.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qvarlengtharray.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qvarlengtharray.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qcontainerfwd.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qcontainerfwd.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qobject_impl.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/kernel/qobject_impl.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/QTimer \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qtimer.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/kernel/qtimer.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qbasictimer.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/kernel/qbasictimer.h \
-		../../../lib/include/monitor_db.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/QSqlDatabase \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/qsqldatabase.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/sql/kernel/qsqldatabase.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/qtsqlglobal.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/sql/kernel/qtsqlglobal.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/qtsql-config.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/sql/qtsql-config.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/QMutex \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/QJsonObject \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qjsonobject.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/serialization/qjsonobject.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qjsonvalue.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/serialization/qjsonvalue.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qshareddata.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qshareddata.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qhash.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qhash.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qcborvalue.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/serialization/qcborvalue.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qdatetime.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/time/qdatetime.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qcborcommon.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/serialization/qcborcommon.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qdebug.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/io/qdebug.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qmap.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qmap.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qtextstream.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/serialization/qtextstream.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qiodevice.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/io/qiodevice.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qlocale.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qlocale.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qvariant.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/kernel/qvariant.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qset.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qset.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qcontiguouscache.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qcontiguouscache.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qsharedpointer.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qsharedpointer.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qsharedpointer_impl.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/tools/qsharedpointer_impl.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qregularexpression.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/text/qregularexpression.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qurl.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/io/qurl.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qurlquery.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/io/qurlquery.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/quuid.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/plugin/quuid.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/QJsonArray \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qjsonarray.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/serialization/qjsonarray.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/QVariantList \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/QSqlError \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/qsqlerror.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/sql/kernel/qsqlerror.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/QSqlQuery \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/qsqlquery.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/sql/kernel/qsqlquery.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/QSqlRecord \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtSql/qsqlrecord.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/sql/kernel/qsqlrecord.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/QFile \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qfile.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/io/qfile.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qfiledevice.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/io/qfiledevice.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/QProcess \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/qprocess.h \
-		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/corelib/io/qprocess.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o refresher.o ../../refresher.cpp
 
 server.o: ../../server.cpp ../../server.h \
 		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtCore/QThread \
@@ -1831,6 +1644,8 @@ server.o: ../../server.cpp ../../server.h \
 		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/sql/kernel/qsqlrecord.h \
 		../../../lib/include/refresherlib.h \
 		../../../lib/include/refresherLib_global.h \
+		../../../lib/include/serverlib.h \
+		../../../lib/include/serverLib_global.h \
 		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtXml/QDomDocument \
 		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/include/QtXml/qdom.h \
 		../../../../Desktop/qt-everywhere-src-5.15.2/qtbase/src/xml/dom/qdom.h \

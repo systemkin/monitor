@@ -18,21 +18,19 @@
 #include <QTextStream>
 #include "monitor_db.h"
 #include "refresherlib.h"
+#include "serverlib.h"
 
-class Server : public QTcpServer
+class Server : public QObject
 {
 public:
     Server(QObject *parent = nullptr);
-private:
-    int getState(QString Serial);
-    void respond(QTcpSocket *clientSocket, QJsonDocument responseDoc);
-    void refreshStates();
-    QSqlDatabase db;
-    MonitorDB* dbm;
     QThread* refresherThread;
     Refresher* refresher;
-private slots:
-    void onNewConnection();
+
+    QThread* serviceThread;
+    Service* service;
+
+    MonitorDB* dbm;
 
 };
 

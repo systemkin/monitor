@@ -9,7 +9,7 @@
 
 class REFRESHERLIB_EXPORT  Refresher : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     explicit Refresher(MonitorDB* dbm, QFile* dataFile, QFile* bashFile,QObject* parent = nullptr);
     void start(int time);
