@@ -1,6 +1,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include <QThread>
 #include <QObject>
 #include <QTcpServer>
 #include <QTcpSocket>
@@ -16,7 +17,7 @@
 #include <QFile>
 #include <QTextStream>
 #include "monitor_db.h"
-#include "refresher.h"
+#include "refresherlib.h"
 
 class Server : public QTcpServer
 {
@@ -24,7 +25,6 @@ public:
     Server(QObject *parent = nullptr);
 private:
     int getState(QString Serial);
-    QFile *file;
     void respond(QTcpSocket *clientSocket, QJsonDocument responseDoc);
     void refreshStates();
     QSqlDatabase db;

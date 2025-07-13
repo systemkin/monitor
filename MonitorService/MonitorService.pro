@@ -3,10 +3,15 @@ QT += xml
 QT += core gui widgets network
 CONFIG += c++17 cmdline
 QT += sql
+
 INCLUDEPATH += $$PWD/../lib/include
 win32 {
     LIBS += -L$$PWD/../lib/debug -lmonitor_db
-    # For release build: -L$$PWD/../lib/release
+}
+unix {
+    LIBS += $$PWD/../lib/debug/libmonitor_db.so.1.0.0
+    QMAKE_LFLAGS += -Wl,-rpath,/home/alexej/monitor/lib/debug
+
 }
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -14,7 +19,6 @@ win32 {
 
 SOURCES += \
         main.cpp \
-        refresher.cpp \
         server.cpp
 
 # Default rules for deployment.
@@ -23,5 +27,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    refresher.h \
     server.h

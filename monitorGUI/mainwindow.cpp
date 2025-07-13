@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
 
-    QFile config("C:\\Users\\alexej\\Documents\\monitor\\configGUI.xml");
+    QFile config("/home/alexej/monitor/configGUI.xml");
     if (!config.open(QIODevice::ReadOnly)) {
         qDebug() << "Failed to open config file";
         return;
@@ -331,6 +331,7 @@ void MainWindow::on_buttonAdd_3_clicked() {
     file.close();
 
     requestObj["requestData"] = requestData;
+    qDebug() << requestObj;
     makeJsonRequest(requestObj);
     return;
 }

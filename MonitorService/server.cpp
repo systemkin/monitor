@@ -1,6 +1,6 @@
 #include "server.h"
 #include <monitor_db.h>
-#include <Qthread>
+
 #include <QDomDocument>
 
 Server::Server(QObject *parent) : QTcpServer(parent) {
@@ -8,7 +8,7 @@ Server::Server(QObject *parent) : QTcpServer(parent) {
 
 
 
-    QFile config("C:\\Users\\alexej\\Documents\\monitor\\configService.xml");
+    QFile config("/home/alexej/monitor/configService.xml");
     if (!config.open(QIODevice::ReadOnly)) {
         qDebug() << "Failed to open config file";
         return;
@@ -124,17 +124,18 @@ Server::Server(QObject *parent) : QTcpServer(parent) {
     }
 
 
-    file = new QFile(filePath);
-
+    QFile* file = new QFile(filePath);
+    QFile* bash = new QFile(bashPath);
 
     if (!file->open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << filePath;
         qDebug() << "No such data file or Error during opening" << file->errorString();
         return;
     }
 
 
     refresherThread = new QThread(this);
-    refresher = new Refresher(dbm, file);
+    refresher = new Refresher(dbm, file, bash);
     refresher->moveToThread(refresherThread);
 
     connect(refresherThread, &QThread::started, refresher, [this, timer]() {
@@ -264,13 +265,14 @@ void Server::onNewConnection() {
 
                     QJsonObject device = value.toObject();
 
-                    QJsonObject insertResult = dbm->executeQuery("INSERT INTO devices (serial, name, description, type) VALUES (?, ?, ?, ?)", {device.value("serial"), device.value("name"), device.value("description"), device.value("type")});
+                    QJsonObject insertResult = dbm->executeQuery("INSERT INTO devices (serial, name, description, type) VALUES (?, ?, ?, ?)", {device.value("serial").toString(), device.value("name").toString(), device.value("description").toString(), device.value("type").toBool()});
                     if (insertResult["status"] != "success") {
                         qDebug() << "Can not execute query. message: " << insertResult["message"];
                         dbm->rollbackTransaction();
                         respond(clientSocket, QJsonDocument(insertResult));
                         return;
                     }
+                    qDebug() << "success";
 
                 }
 

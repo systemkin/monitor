@@ -68,7 +68,7 @@ QVariant DeviceInfoModel::data(const QModelIndex &index, int role) const {
         case 0: return QBrush(Qt::gray);
         case 1: return QBrush(QColor(255, 165, 0));
         case 2: return QBrush(Qt::red);
-        case 3: return QBrush(Qt::green);
+        case 3: return QBrush(QColor(0, 125, 0));
         }
     }
     return QVariant();

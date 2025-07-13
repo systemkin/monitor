@@ -1,0 +1,12 @@
+#ifndef REFRESHERLIB_GLOBAL_H
+#define REFRESHERLIB_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(REFRESHERLIB_LIBRARY)
+#define REFRESHERLIB_EXPORT Q_DECL_EXPORT
+#else
+#define REFRESHERLIB_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // REFRESHERLIB_GLOBAL_H

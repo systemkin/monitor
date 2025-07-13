@@ -10,7 +10,7 @@ class Refresher : public QObject
 {
     Q_OBJECT
 public:
-    explicit Refresher(MonitorDB* dbm, QFile* dataFile, QObject* parent = nullptr);
+    explicit Refresher(MonitorDB* dbm, QFile* dataFile, QFile* bashFile,QObject* parent = nullptr);
     void start(int time);
     void stop();
     ~Refresher();
@@ -19,9 +19,10 @@ private slots:
     void refreshStates();
 
 private:
-    QTimer* m_timer;
+    QTimer* timer;
     MonitorDB* m_dbm;
-    QFile* m_dataFile;
+    QFile* dataFile;
+    QFile* bashFile;
     int getState(QString serial, bool type);
 };
 

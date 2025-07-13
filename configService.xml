@@ -8,7 +8,7 @@
     </database>
     <control>
 	<time>1000</time>
-	<bash>C:\\Users\\alexej\\Documents\\monitor\\MonitorService\\data.txt</bash>
-	<file>C:\\Users\\alexej\\Documents\\monitor\\MonitorService\\data.txt</file>
+	<bash>/home/alexej/monitor/states.sh</bash>
+	<file>/home/alexej/monitor/data.txt</file>
     </control>
 </config>

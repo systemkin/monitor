@@ -1,40 +1,58 @@
 #include "refresher.h"
+#include <QProcess>
 
 
-
-Refresher::Refresher(MonitorDB* dbm, QFile* dataFile, QObject* parent)
-    : QObject(parent), m_dbm(dbm), m_dataFile(dataFile)
+Refresher::Refresher(MonitorDB* dbm, QFile* dataFile, QFile* bashFile,QObject* parent)
+    : QObject(parent), m_dbm(dbm), dataFile(dataFile), bashFile(bashFile)
 {
-    m_timer = new QTimer(this);
-    connect(m_timer, &QTimer::timeout, this, &Refresher::refreshStates);
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &Refresher::refreshStates);
 }
 Refresher::~Refresher()
 {
     stop();
-    m_timer->deleteLater();
+    timer->deleteLater();
 }
 void Refresher::start(int time)
 {
-    m_timer->start(time);
+    timer->start(time);
 }
 
 void Refresher::stop()
 {
-    m_timer->stop();
+    timer->stop();
 }
 
 int Refresher::getState(QString serial, bool type)
 {
-    QTextStream in(m_dataFile);
-    m_dataFile->seek(0);
-    while (!in.atEnd()) {
-        QString line = in.readLine();
-        QStringList stringList = line.split(" ");
-        if (stringList[0] == serial) {
-            return stringList[1].toInt();
+    if (type) {
+        QProcess process;
+        process.start("bash", QStringList() << bashFile->fileName() << serial << dataFile->fileName());
+        if (!process.waitForFinished()) {
+            qDebug() << "Script execution error";
+            return 0;
         }
+
+        QByteArray output = process.readAllStandardOutput();
+        bool ok;
+        int state = output.trimmed().toInt(&ok);
+        if (ok) return state;
+        else return 0;
     }
-    return 0;
+    else {
+        QTextStream in(dataFile);
+        dataFile->seek(0);
+        while (!in.atEnd()) {
+
+            QString line = in.readLine();
+            QStringList stringList = line.split(" ");
+
+            if (stringList[0] == serial) {
+                return stringList[1].toInt();
+            }
+        }
+        return 0;
+    }
 }
 
 void Refresher::refreshStates()
@@ -56,6 +74,7 @@ void Refresher::refreshStates()
 
         if (currState != dbState) {
             QJsonObject updateResult = m_dbm->executeQuery("UPDATE states SET state = ? WHERE device_id = ?", {currState, device["id"].toInt()});
+            qDebug() << "changed to: " << currState << " from" << dbState;
             if (updateResult["status"] != "success") {
                 qDebug() << "Update failed, problem with device: " << device["id"].toInt();
                 return;
