@@ -1,3 +1,4 @@
 **/build
 **/debug
 !lib/debug/
+**pro.user
