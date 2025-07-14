@@ -48,6 +48,9 @@ QVariant showHistoryModel::data(const QModelIndex &index, int role) const {
             case 3:
                 return QString("Работает");
                 break;
+            default:
+                return QString("Неизвестно");
+                break;
             }
             break;
         case 3:
@@ -78,6 +81,7 @@ QVariant showHistoryModel::data(const QModelIndex &index, int role) const {
         case 1: return QBrush(QColor(255, 165, 0));
         case 2: return QBrush(Qt::red);
         case 3: return QBrush(QColor(0, 125, 0));
+        default: return QBrush(Qt::gray);
         }
     }
     if ((role == Qt::ForegroundRole) && (index.column() == 3))  {
@@ -86,6 +90,7 @@ QVariant showHistoryModel::data(const QModelIndex &index, int role) const {
         case 1: return QBrush(QColor(255, 165, 0));
         case 2: return QBrush(Qt::red);
         case 3: return QBrush(QColor(0, 125, 0));
+        default: return QBrush(Qt::gray);
         }
     }
     return QVariant();

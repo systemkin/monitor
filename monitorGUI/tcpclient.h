@@ -2,6 +2,7 @@
 #define TCPCLIENT_H
 
 #include <QObject>
+#include <QMutex>
 
 class tcpClient : public QObject
 {
@@ -12,7 +13,7 @@ public:
 private:
     QString host;
     int port;
-
+    QMutex connectionMutex;
 signals:
     void requestCompleted(const QJsonObject &requestObject, const QJsonDocument &responseDoc);
 
