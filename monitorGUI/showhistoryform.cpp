@@ -8,10 +8,11 @@
 
 #include <QMessageBox>
 
-showHistoryForm::showHistoryForm(MainWindow *parent)
+showHistoryForm::showHistoryForm(tcpClient *client, MainWindow *parent)
     : QDialog(parent)
     , ui(new Ui::showHistoryForm)
 {
+    this->client = client;
     ui->setupUi(this);
     model = new showHistoryModel;
     ui->tableView->setModel(new showHistoryModel);
@@ -20,43 +21,17 @@ showHistoryForm::showHistoryForm(MainWindow *parent)
     ui->tableView->setColumnWidth(2, 200);
     ui->tableView->setColumnWidth(3, 200);
     ui->tableView->setColumnWidth(4, 300);
-    host = parent->getHost();
-    port = parent->getPort();
     ui->comboBox->addItems({"Неизвестно", "Не работает", "Авария", "Работает"});
 
-    connect(this, &showHistoryForm::requestCompleted, this, &showHistoryForm::onRequestCompleted);
+    connect(client, &tcpClient::requestCompleted,
+            this, &showHistoryForm::onRequestCompleted);
 }
 
 showHistoryForm::~showHistoryForm()
 {
     delete ui;
 }
-void showHistoryForm::makeJsonRequest(QJsonObject requestObject) {
-    QTcpSocket *socket = new QTcpSocket(this);
-    socket->connectToHost(host, port);
 
-    connect(socket, &QTcpSocket::connected, this, [socket, requestObject]() {
-        QJsonDocument requestDoc(requestObject);
-        QByteArray requestData = requestDoc.toJson();
-        QByteArray lengthPrefix = QByteArray::number(requestData.size()) + "\n";
-
-        socket->write(lengthPrefix + requestData);
-        socket->flush();
-    });
-
-    QByteArray *buffer = new QByteArray();
-    connect(socket, &QTcpSocket::readyRead, this, [socket, buffer]() {
-        buffer->append(socket->readAll());
-    });
-
-    connect(socket, &QTcpSocket::disconnected, this, [this, socket, requestObject, buffer]() {
-
-        emit requestCompleted(requestObject, QJsonDocument::fromJson(*buffer));
-
-        socket->deleteLater();
-    });
-
-}
 
 void showHistoryForm::onRequestCompleted(const QJsonObject &requestObject, const QJsonDocument &responseDoc) {
     if (requestObject["requestType"] == "showHistory") {
@@ -91,7 +66,7 @@ void showHistoryForm::on_pushButton_clicked()
     if(ui->checkBox->isChecked()) requestObj["low"] = ui->dateTimeEdit->dateTime().toString("yyyy-MM-ddTHH:mm:ss.zzz");
     if(ui->checkBox_2->isChecked()) requestObj["high"] = ui->dateTimeEdit_2->dateTime().toString("yyyy-MM-ddTHH:mm:ss.zzz");
     if(ui->checkBox_3->isChecked()) requestObj["state"] = ui->comboBox->currentIndex();
-    makeJsonRequest(requestObj);
+    client->makeJsonRequest(requestObj);
 }
 
 

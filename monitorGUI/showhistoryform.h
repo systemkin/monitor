@@ -13,20 +13,16 @@ class showHistoryForm : public QDialog
     Q_OBJECT
 
 public:
-    explicit showHistoryForm(MainWindow *parent = nullptr);
+    explicit showHistoryForm(tcpClient *client, MainWindow *parent = nullptr);
     ~showHistoryForm();
 
 private slots:
     void on_pushButton_clicked();
     void on_pushButton_2_clicked();
 
-signals:
-    void requestCompleted(const QJsonObject &requestObject, const QJsonDocument &responseDoc);
 private:
-    QString host;
-    int port;
+
     Ui::showHistoryForm *ui;
-    void makeJsonRequest(QJsonObject requestObject);
     void onRequestCompleted(const QJsonObject &requestObject, const QJsonDocument &responseDoc);
     std::vector<historyItem> container;
     showHistoryModel* model;
@@ -39,6 +35,8 @@ private:
     QString generateHTMLTable(const std::vector<historyItem>& container);
 
     std::vector<historyItem> getContainerCopy();
+
+    tcpClient *client;
 };
 
 #endif // SHOWHISTORYFORM_H

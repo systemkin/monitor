@@ -4,7 +4,8 @@
 #include <QMainWindow>
 #include "./ui_mainwindow.h"
 #include "deviceinfomodel.h"
-#include "tcpcommunicator.h"
+#include "tcpclient.h"
+
 
 #include <QTcpSocket>
 #include <QJsonObject>
@@ -26,23 +27,18 @@ public:
     ~MainWindow();
     QString getHost();
     int getPort();
-signals:
-    void requestCompleted(const QJsonObject &requestObject, const QJsonDocument &responseDoc);
+
 private slots:
-    void on_pushButton_clicked();
+
     void onRequestCompleted(const QJsonObject &requestObject, const QJsonDocument &responseDoc);
+
+    void on_pushButton_clicked();
     void on_buttonAdd_clicked();
-
     void on_buttonChange_clicked();
-
     void on_buttonDelete_clicked();
-
     void on_buttonAdd_2_clicked();
-
     void on_buttonExport_clicked();
-
     void on_buttonAdd_3_clicked();
-
     void on_buttonExport_2_clicked();
 
 private:
@@ -50,7 +46,6 @@ private:
     int port;
     Ui::MainWindow *ui;
 
-    void makeJsonRequest(QJsonObject requestObject);
 
     DeviceInfoModel* model;
 
@@ -60,5 +55,8 @@ private:
     void exportToCSV(const QString &fileName, const std::vector<deviceInfo>& container);
     void exportToHTML(const QString &fileName, const std::vector<deviceInfo>& container);
     QString generateHTMLTable(const std::vector<deviceInfo>& container);
+
+
+    tcpClient *client;
 };
 #endif // MAINWINDOW_H

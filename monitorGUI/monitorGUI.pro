@@ -15,7 +15,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     showhistoryform.cpp \
-    showhistorymodel.cpp
+    showhistorymodel.cpp \
+    tcpclient.cpp
 
 HEADERS += \
     adddeviceform.h \
@@ -23,7 +24,8 @@ HEADERS += \
     mainwindow.h \
     showhistoryform.h \
     showhistorymodel.h \
-    states.h
+    states.h \
+    tcpclient.h
 
 FORMS += \
     adddeviceform.ui \

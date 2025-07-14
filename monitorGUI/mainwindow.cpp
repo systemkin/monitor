@@ -60,7 +60,12 @@ MainWindow::MainWindow(QWidget *parent)
         return;
     }
 
-    connect(this, &MainWindow::requestCompleted, this, &MainWindow::onRequestCompleted);
+    client = new tcpClient(host, port);
+    connect(client, &tcpClient::requestCompleted,
+            this, &MainWindow::onRequestCompleted);
+
+
+
 
     ui->setupUi(this);
     model = new DeviceInfoModel();
@@ -69,9 +74,17 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView->setColumnWidth(1, 200);
 
+
+
+
+
+
+
+
+
     QJsonObject requestObj;
     requestObj["requestType"] = "getStates";
-    makeJsonRequest(requestObj);
+    client->makeJsonRequest(requestObj);
 }
 
 MainWindow::~MainWindow()
@@ -79,39 +92,16 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::makeJsonRequest(QJsonObject requestObject) {
-    QTcpSocket *socket = new QTcpSocket(this);
-    socket->connectToHost(host, port);
 
-    connect(socket, &QTcpSocket::connected, this, [socket, requestObject]() {
-        QJsonDocument requestDoc(requestObject);
-        QByteArray requestData = requestDoc.toJson();
-        QByteArray lengthPrefix = QByteArray::number(requestData.size()) + "\n";
-
-        socket->write(lengthPrefix + requestData);
-        socket->flush();
-    });
-
-    QByteArray *buffer = new QByteArray();
-    connect(socket, &QTcpSocket::readyRead, this, [socket, buffer]() {
-        buffer->append(socket->readAll());
-    });
-
-    connect(socket, &QTcpSocket::disconnected, this, [this, socket, requestObject, buffer]() {
-
-        emit requestCompleted(requestObject, QJsonDocument::fromJson(*buffer));
-
-        socket->deleteLater();
-    });
-
-}
 
 void MainWindow::on_pushButton_clicked()
 {
 
     QJsonObject requestObj;
     requestObj["requestType"] = "getStates";
-    makeJsonRequest(requestObj);
+
+
+    client->makeJsonRequest(requestObj);
 }
 
 void MainWindow::onRequestCompleted(const QJsonObject &requestObject, const QJsonDocument &responseDoc) {
@@ -191,7 +181,7 @@ void MainWindow::on_buttonAdd_clicked()
 
 
     requestObj["requestData"] = device;
-    makeJsonRequest(requestObj);
+    client->makeJsonRequest(requestObj);
 }
 
 
@@ -222,7 +212,7 @@ void MainWindow::on_buttonChange_clicked()
 
 
     requestObj["requestData"] = device;
-    makeJsonRequest(requestObj);
+    client->makeJsonRequest(requestObj);
 }
 
 void MainWindow::on_buttonDelete_clicked()
@@ -235,13 +225,13 @@ void MainWindow::on_buttonDelete_clicked()
     QJsonObject device;
     device["id"] = deviceInfo.id;
     requestObj["requestData"] = device;
-    makeJsonRequest(requestObj);
+    client->makeJsonRequest(requestObj);
 }
 
 
 void MainWindow::on_buttonAdd_2_clicked()
 {
-    showHistoryForm *form = new showHistoryForm(this);
+    showHistoryForm *form = new showHistoryForm(client, this);
     form->exec();
 }
 
@@ -332,7 +322,7 @@ void MainWindow::on_buttonAdd_3_clicked() {
 
     requestObj["requestData"] = requestData;
     qDebug() << requestObj;
-    makeJsonRequest(requestObj);
+    client->makeJsonRequest(requestObj);
     return;
 }
 
