@@ -9,9 +9,10 @@ QT += printsupport
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+include(../structs.pri)
+
 SOURCES += \
     adddeviceform.cpp \
-    device.cpp \
     deviceinfomodel.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -21,12 +22,10 @@ SOURCES += \
 
 HEADERS += \
     adddeviceform.h \
-    device.h \
     deviceinfomodel.h \
     mainwindow.h \
     showhistoryform.h \
     showhistorymodel.h \
-    states.h \
     tcpclient.h
 
 FORMS += \

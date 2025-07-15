@@ -111,7 +111,7 @@ void MainWindow::onRequestCompleted(const QJsonObject &requestObject, const QJso
         std::vector<deviceInfo> container = std::vector<deviceInfo>(responseArray.size());
         int i = 0;
         for (const QJsonValue &value : std::as_const(responseArray)) {
-            deviceInfo device = deviceInfo::fromJson(value.toObject());
+            deviceInfo device = deviceInfo(value.toObject());
             container[i++] = device;
         }
         delete model;

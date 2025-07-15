@@ -28,7 +28,6 @@ public:
      * \return Json-representation of device with fields: serial, name, description, type
      */
     QJsonObject toJson();
-private:
     /*!
      * \brief device serial
      */
@@ -55,5 +54,6 @@ private:
      * \return true if equals, false otherwise.
      */
     bool operator==(const device& other) const;
+private:
 };
 #endif // DEVICE_H

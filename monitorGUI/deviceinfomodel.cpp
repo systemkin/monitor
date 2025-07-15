@@ -1,6 +1,7 @@
 #include "deviceinfomodel.h"
 #include <QTextStream>
 #include <QBrush>
+#include "states.h"
 
 DeviceInfoModel::DeviceInfoModel()
     : QAbstractTableModel()
@@ -46,17 +47,17 @@ QVariant DeviceInfoModel::data(const QModelIndex &index, int role) const {
             else return QString("Файл");
             break;
         case 5:
-            switch(container[index.row()].state) {
-            case 0:
+            switch(intToState(container[index.row()].state)) {
+            case State::Undefined:
                 return QString("Неизвестно");
                 break;
-            case 1:
+            case State::NotWorking:
                 return QString("Не работает");
                 break;
-            case 2:
+            case State::Failure:
                 return QString("Авария");
                 break;
-            case 3:
+            case State::Working:
                 return QString("Работает");
                 break;
             }

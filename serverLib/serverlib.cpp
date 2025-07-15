@@ -48,12 +48,8 @@ void Service::onNewConnection() {
                 respond(clientSocket, responseDoc);
 
             } else if (requestObject["requestType"] == "addDevice") {
-                QJsonObject requestData = requestObject["requestData"].toObject();
-                QString serial = requestData["serial"].toString();
-                QString name = requestData["name"].toString();
-                QString description = requestData["description"].toString();
-                bool type = requestData["type"].toBool();
-                QJsonObject result = dbm->executeQuery("SELECT id FROM devices WHERE serial = ?", {serial});
+                device device(requestObject["requestData"].toObject());
+                QJsonObject result = dbm->executeQuery("SELECT id FROM devices WHERE serial = ?", {device.serial});
                 if (result["status"] != "success") {
                     qDebug() << "Can not execute query. message: " << result["message"];
                     respond(clientSocket, QJsonDocument(result));
@@ -61,7 +57,7 @@ void Service::onNewConnection() {
                 }
                 if (result["data"].toArray().size() != 0) {
                     QJsonObject response;
-                    qDebug() << "Already exists while creating " + serial;
+                    qDebug() << "Already exists while creating " + device.serial;
                     response["status"] = "fail";
                     response["message"] = "Already exists";
                     QJsonDocument responseDoc(response);
@@ -69,7 +65,7 @@ void Service::onNewConnection() {
                     return;
                 }
 
-                QJsonObject insertResult = dbm->executeQuery("INSERT INTO devices (serial, name, description, type) VALUES (?, ?, ?, ?)", {serial, name, description, type});
+                QJsonObject insertResult = dbm->executeQuery("INSERT INTO devices (serial, name, description, type) VALUES (?, ?, ?, ?)", {device.serial, device.name, device.description, device.type});
                 if (insertResult["status"] != "success") {
                     qDebug() << "Can not execute query. message: " << insertResult["message"];
                     respond(clientSocket, QJsonDocument(insertResult));
@@ -80,14 +76,9 @@ void Service::onNewConnection() {
 
             } else if (requestObject["requestType"] == "editDevice") {
                 db.transaction();
-                QJsonObject requestData = requestObject["requestData"].toObject();
-                int id = requestData["id"].toInt();
-                QString serial = requestData["serial"].toString();
-                QString name = requestData["name"].toString();
-                QString description = requestData["description"].toString();
-                bool type = requestData["type"].toBool();
+                deviceInfo deviceInfo(requestObject["requestData"].toObject());
 
-                QJsonObject result = dbm->executeQuery("SELECT id FROM devices WHERE serial = ? AND id != ?", {serial, id});
+                QJsonObject result = dbm->executeQuery("SELECT id FROM devices WHERE serial = ? AND id != ?", {deviceInfo.serial, deviceInfo.id});
                 if (result["status"] != "success") {
                     qDebug() << "Can not execute query. message: " << result["message"];
                     respond(clientSocket, QJsonDocument(result));
@@ -102,7 +93,7 @@ void Service::onNewConnection() {
                     respond(clientSocket, responseDoc);
                     return;
                 }
-                QJsonObject updateResult = dbm->executeQuery("UPDATE devices SET serial = ?, name = ?, description = ?, type = ? WHERE id = ? ", {serial, name, description, type, id});
+                QJsonObject updateResult = dbm->executeQuery("UPDATE devices SET serial = ?, name = ?, description = ?, type = ? WHERE id = ? ", {deviceInfo.serial, deviceInfo.name, deviceInfo.description, deviceInfo.type, deviceInfo.id});
                 if (updateResult["status"] != "success") {
                     qDebug() << "Can not execute query. message: " << updateResult["message"];
                     respond(clientSocket, QJsonDocument(updateResult));

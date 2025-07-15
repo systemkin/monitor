@@ -1,6 +1,7 @@
 #include "showhistorymodel.h"
 #include <QDebug>
 #include <QBrush>
+#include "states.h"
 
 showHistoryModel::showHistoryModel()
     : QAbstractTableModel()
@@ -35,17 +36,17 @@ QVariant showHistoryModel::data(const QModelIndex &index, int role) const {
             return QString(container[index.row()].name);
             break;
         case 2:
-            switch(container[index.row()].prev_state) {
-            case 0:
+            switch(intToState(container[index.row()].prev_state)) {
+            case State::Undefined:
                 return QString("Неизвестно");
                 break;
-            case 1:
+            case State::NotWorking:
                 return QString("Не работает");
                 break;
-            case 2:
+            case State::Failure:
                 return QString("Авария");
                 break;
-            case 3:
+            case State::Working:
                 return QString("Работает");
                 break;
             default:
@@ -54,18 +55,21 @@ QVariant showHistoryModel::data(const QModelIndex &index, int role) const {
             }
             break;
         case 3:
-            switch(container[index.row()].new_state) {
-            case 0:
+            switch(intToState(container[index.row()].new_state)) {
+            case State::Undefined:
                 return QString("Неизвестно");
                 break;
-            case 1:
+            case State::NotWorking:
                 return QString("Не работает");
                 break;
-            case 2:
+            case State::Failure:
                 return QString("Авария");
                 break;
-            case 3:
+            case State::Working:
                 return QString("Работает");
+                break;
+            default:
+                return QString("Неизвестно");
                 break;
             }
             break;
@@ -127,6 +131,5 @@ QVariant showHistoryModel::headerData(int section, Qt::Orientation orientation, 
     return QVariant();
 }
 std::vector<historyItem> showHistoryModel::getContainerCopy() {
-    qDebug() << "3";
     return container;
 }
