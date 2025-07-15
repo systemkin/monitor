@@ -111,16 +111,7 @@ void MainWindow::onRequestCompleted(const QJsonObject &requestObject, const QJso
         std::vector<deviceInfo> container = std::vector<deviceInfo>(responseArray.size());
         int i = 0;
         for (const QJsonValue &value : std::as_const(responseArray)) {
-
-
-            QJsonObject deviceJson = value.toObject();
-            int id = deviceJson.value("id").toInt();
-            QString serial = deviceJson.value("serial").toString();
-            QString name = deviceJson.value("name").toString();
-            QString description = deviceJson.value("description").toString();
-            bool type = deviceJson.value("type").toBool();
-            int state = deviceJson.value("state").toInt();
-            deviceInfo device({id, serial, name, description, type, state});
+            deviceInfo device = deviceInfo::fromJson(value.toObject());
             container[i++] = device;
         }
         delete model;
@@ -172,13 +163,7 @@ void MainWindow::on_buttonAdd_clicked()
 
     QJsonObject requestObj;
     requestObj["requestType"] = "addDevice";
-    QJsonObject device;
-    device["name"] = form.getName();
-    device["description"] = form.getDescription();
-    device["serial"] = form.getSerial();
-    device["type"] = form.getType();
-
-
+    QJsonObject device = form.getDevice().toJson();
 
     requestObj["requestData"] = device;
     client->makeJsonRequest(requestObj);
@@ -195,23 +180,18 @@ void MainWindow::on_buttonChange_clicked()
     int row = list.at(0).row();
     deviceInfo deviceInfo = model->at(row);
 
-
     addDeviceForm form = addDeviceForm(deviceInfo.serial, deviceInfo.name, deviceInfo.description, deviceInfo.type);
     form.exec();
     if (form.discarded) return;
 
     QJsonObject requestObj;
     requestObj["requestType"] = "editDevice";
-    QJsonObject device;
-    device["id"] = deviceInfo.id;
-    device["name"] = form.getName();
-    device["description"] = form.getDescription();
-    device["serial"] = form.getSerial();
-    device["type"] = form.getType();
+
+    QJsonObject requestData = form.getDevice().toJson();
+    requestData["id"] = deviceInfo.id;
 
 
-
-    requestObj["requestData"] = device;
+    requestObj["requestData"] = requestData;
     client->makeJsonRequest(requestObj);
 }
 
@@ -303,18 +283,16 @@ void MainWindow::on_buttonAdd_3_clicked() {
     QJsonArray requestData;
 
     for (quint32 i = 0; i < size; ++i) {
-        deviceInfo device;
-        in >> device.serial
-            >> device.name
-            >> device.description
-            >> device.type;
-
-        QJsonObject obj;
-        obj["serial"] = device.serial;
-        obj["name"] = device.name;
-        obj["description"] = device.description;
-        obj["type"] = device.type;
-
+        QString serial;
+        QString name;
+        QString description;
+        bool type;
+        in >> serial
+            >> name
+            >> description
+            >> type;
+        device device(serial, name, description, type);
+        QJsonObject obj = device.toJson();
         requestData.append(obj);
     }
 
@@ -385,12 +363,7 @@ void MainWindow::exportToText(const QString &fileName, const std::vector<deviceI
 
     for (const auto &device : container) {
 
-        out << device.id << "\t"
-            << device.serial << "\t"
-            << device.name << "\t"
-            << device.description << "\t"
-            << (device.type ?  QString::fromUtf8("bash") :  QString::fromUtf8("Файл")) << "\t"
-            << stateToString(device.state) << "\n";
+        out << device.toText();
     }
 
     file.close();
@@ -414,12 +387,7 @@ void MainWindow::exportToCSV(const QString &fileName, const std::vector<deviceIn
 
     for (const auto &device : container) {
 
-        out << "\"" << device.id << "\","
-            << "\"" << device.serial << "\","
-            << "\"" << device.name << "\","
-            << "\"" << device.description << "\","
-            << "\"" << (device.type ? "bash" : QString::fromUtf8("Файл")) << "\","
-            << "\"" << stateToString(device.state) << "\"\n";
+        out << device.toCSV();
     }
 
     file.close();

@@ -23,6 +23,11 @@ public:
      * \param deviceJson - json with necessary fields: serial, name, description, type
      */
     device(QJsonObject deviceJson);
+    /*!
+     * \brief creates json representation of device
+     * \return Json-representation of device with fields: serial, name, description, type
+     */
+    QJsonObject toJson();
 private:
     /*!
      * \brief device serial
@@ -50,11 +55,5 @@ private:
      * \return true if equals, false otherwise.
      */
     bool operator==(const device& other) const;
-
-    /*!
-     * \brief creates json representation of device
-     * \return Json-representation of device with fields: serial, name, description, type
-     */
-    QJsonObject toJson();
 };
 #endif // DEVICE_H
