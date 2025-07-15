@@ -2,7 +2,7 @@
 #define ADDDEVICEFORM_H
 
 #include <QDialog>
-
+#include "device.h"
 namespace Ui {
 class addDeviceForm;
 }
@@ -21,6 +21,11 @@ public:
     ~addDeviceForm();
     bool discarded;
 
+    /*!
+     * \brief returns device written in fields of form
+     * \return object of class device
+     */
+    device getDevice();
 private slots:
     void on_pushButton_2_clicked();
 

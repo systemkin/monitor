@@ -40,7 +40,9 @@ QString addDeviceForm::getName() {
 QString addDeviceForm::getDescription() {
     return ui->lineEdit_3->text();
 }
-
+device addDeviceForm::getDevice() {
+    return device(this->getSerial(), this->getName(), this->getDescription(), this->getType());
+}
 void addDeviceForm::on_pushButton_2_clicked()
 {
     if (this->getName().contains(",") || this->getSerial().contains(",") || this->getDescription().contains(",")) {
