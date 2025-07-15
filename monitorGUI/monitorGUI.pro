@@ -11,6 +11,7 @@ QT += printsupport
 
 SOURCES += \
     adddeviceform.cpp \
+    device.cpp \
     deviceinfomodel.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
 
 HEADERS += \
     adddeviceform.h \
+    device.h \
     deviceinfomodel.h \
     mainwindow.h \
     showhistoryform.h \
