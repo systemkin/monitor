@@ -42,13 +42,7 @@ void showHistoryForm::onRequestCompleted(const QJsonObject &requestObject, const
         int i = 0;
         for (const QJsonValue &value : std::as_const(responseArray)) {
 
-            QJsonObject historyItemJson = value.toObject();
-            QString serial = historyItemJson.value("serial").toString();
-            QString name = historyItemJson.value("name").toString();
-            int prevState = historyItemJson.value("prev_state").toInt();
-            int newState = historyItemJson.value("new_state").toInt();
-            QString dateTime = historyItemJson.value("time").toString();
-            historyItem historyItem({serial, name, prevState, newState, dateTime});
+            historyItem historyItem = historyItem::fromJson(value.toObject());
             container[i++] = historyItem;
 
         }
@@ -87,9 +81,7 @@ void showHistoryForm::on_pushButton_2_clicked()
     }
 
     if (fileName.endsWith(".pdf", Qt::CaseInsensitive)) {
-        qDebug() << "1";
         std::vector<historyItem> cont = model->getContainerCopy();
-        qDebug() << "2";
         exportToPDF(fileName, cont);
     } else if (fileName.endsWith(".txt", Qt::CaseInsensitive)) {
         exportToText(fileName, model->getContainerCopy());
@@ -110,9 +102,7 @@ void showHistoryForm::exportToPDF(const QString &fileName, const std::vector<his
     printer.setOutputFileName(fileName);
 
     QTextDocument doc;
-    qDebug() << "1";
     QString html = generateHTMLTable(container);
-    qDebug() << html;
     doc.setHtml(html);
 
     doc.print(&printer);
