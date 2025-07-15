@@ -9,16 +9,52 @@
 class device
 {
 public:
-    device();
-    device(int id, QString serial, QString name, QString description, bool type);
+    /*!
+     * \brief - constructor with setting all fields directly
+     * \param serial - serial nubmer
+     * \param name - device name
+     * \param description - device description
+     * \param type - true for monitoring from bash, false for monitoring from file
+     */
+    device(QString serial, QString name, QString description, bool type);
+
+    /*!
+     * \brief constructor from Json
+     * \param deviceJson - json with necessary fields: serial, name, description, type
+     */
     device(QJsonObject deviceJson);
 private:
-    int id;
+    /*!
+     * \brief device serial
+     */
     QString serial;
+
+    /*!
+     * \brief device name
+     */
     QString name;
+
+    /*!
+     * \brief device description
+     */
     QString description;
+
+    /*!
+     * \brief device type. true for monitoring from bash, false for monitoring from file
+     */
     bool type;
+
+    /*!
+     * \brief comparison operator
+     * \param other - other device
+     * \return true if equals, false otherwise.
+     */
     bool operator==(const device& other) const;
+
+    /*!
+     * \brief creates json representation of device
+     * \return Json-representation of device with fields: serial, name, description, type
+     */
     QJsonObject toJson();
 };
 #endif // DEVICE_H
