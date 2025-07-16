@@ -1,6 +1,11 @@
 #include "device.h"
 
-
+device::device() {
+    serial = "";
+    name = "";
+    description = "";
+    type = false;
+}
 device::device(QString serial, QString name, QString description, bool type) {
     this->serial = serial;
     this->name = name;

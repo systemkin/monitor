@@ -187,7 +187,8 @@ void MainWindow::on_buttonChange_clicked()
     QJsonObject requestObj;
     requestObj["requestType"] = "editDevice";
 
-    QJsonObject requestData = form.getDevice().toJson();
+    QJsonObject requestData;
+    requestData["device"] = form.getDevice().toJson();
     requestData["id"] = deviceInfo.id;
 
 

@@ -134,13 +134,7 @@ QJsonObject db_repository::changeDevices(std::vector<device> devices) {
         qDebug() << "Can not execute query. message: " << result["message"];
         return result;
     }
-
-
-
-
     for (const device &device : devices) {
-
-
         QJsonObject insertResult = MonitorDB::getInstance()->executeQuery("INSERT INTO devices (serial, name, description, type) VALUES (?, ?, ?, ?)", {device.serial, device.name, device.description, device.type});
         if (insertResult["status"] != "success") {
             qDebug() << "Can not execute query. message: " << insertResult["message"];

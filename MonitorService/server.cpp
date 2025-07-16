@@ -111,14 +111,6 @@ Server::Server(QObject *parent) : QObject(parent) {
         qDebug() << "No field 'control.time' in file";
         return;
     }
-
-    QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
-    db.setHostName(host);
-    db.setDatabaseName(name);
-    db.setUserName(username);
-    db.setPassword(password);
-    db.setPort(port);
-
     dbm = MonitorDB::initialize(host, name, username, password, port);
     dbm = MonitorDB::getInstance();
 
@@ -132,7 +124,7 @@ Server::Server(QObject *parent) : QObject(parent) {
     }
 
 
-    refresherThread = new QThread(this);
+    refresherThread = new QThread(nullptr);
     refresher = new Refresher(dbm, file, bash);
     refresher->moveToThread(refresherThread);
 
@@ -143,13 +135,13 @@ Server::Server(QObject *parent) : QObject(parent) {
 
     refresherThread->start();
 
-
-    serviceThread = new QThread(this);
-    service = new Service(dbm);
+    serviceThread = new QThread();
+    service = new Service(nullptr);
     service->listen(QHostAddress::Any, 12345);
     service->moveToThread(serviceThread);
     serviceThread->start();
-
-
-
+}
+Server::~Server(){
+    delete serviceThread;
+    delete refresherThread;
 }

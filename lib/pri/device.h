@@ -9,6 +9,8 @@
 class device
 {
 public:
+    device();
+
     /*!
      * \brief - constructor with setting all fields directly
      * \param serial - serial nubmer

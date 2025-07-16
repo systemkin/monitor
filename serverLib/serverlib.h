@@ -17,22 +17,28 @@
 #include <QTimer>
 #include <QFile>
 #include <QTextStream>
-#include "monitor_db.h"
 #include "historyItem.h"
-#include "device.h"
 #include "deviceInfo.h"
+
+/*!
+ * \brief class for mamging incloming connections on service. Recieves request, serves it and responds
+ */
 class SERVERLIB_EXPORT Service :  public QTcpServer
 {
 public:
-    Service (MonitorDB* dbm, QObject *parent = nullptr);
+    Service (QObject *parent = nullptr);
 private:
-    int getState(QString Serial);
+    /*!
+     * \brief function for responding and disconnecting from host
+     * \param QTcpSocket with active connection
+     * \param JSON-document for respond
+     */
     void respond(QTcpSocket *clientSocket, QJsonDocument responseDoc);
-    void refreshStates();
-    QSqlDatabase db;
-    MonitorDB* dbm;
 
 private slots:
+    /*!
+     * \brief slot, that connects events of tcp-connection with lambda, that processes requests
+     */
     void onNewConnection();
 
 };

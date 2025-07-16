@@ -24,6 +24,7 @@ class Server : public QObject
 {
 public:
     Server(QObject *parent = nullptr);
+    ~Server();
     QThread* refresherThread;
     Refresher* refresher;
 

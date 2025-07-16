@@ -3,13 +3,12 @@
 
 #include <QDomDocument>
 #include "db_repository.h"
-Service::Service(MonitorDB* dbm, QObject *parent) : QTcpServer(parent) {
+#include "device.h"
+
+Service::Service(QObject *parent) : QTcpServer(parent) {
     connect(this, &QTcpServer::newConnection, this, &Service::onNewConnection);
-
-
-    this->dbm = dbm;
-
 }
+
 void Service::onNewConnection() {
     QTcpSocket *clientSocket = nextPendingConnection();
     connect(clientSocket, &QTcpSocket::disconnected, clientSocket, &QTcpSocket::deleteLater);
@@ -20,22 +19,15 @@ void Service::onNewConnection() {
         while (true) {
 
             int newlineIndex = buffer->indexOf('\n');
-            if (newlineIndex == -1) {
-                break;
-            }
+            if (newlineIndex == -1) break;
 
             QByteArray lengthPrefix = buffer->left(newlineIndex);
-
             int messageLength = lengthPrefix.toInt();
-
-            if (buffer->size() < newlineIndex + 1 + messageLength) {
-                break;
-            }
+            if (buffer->size() < newlineIndex + 1 + messageLength) break;
 
             QByteArray messageData = buffer->mid(newlineIndex + 1, messageLength);
             buffer->clear();
             QJsonObject requestObject = QJsonDocument::fromJson(messageData).object();
-
 
             if (requestObject["requestType"] == "getStates") {
                 QJsonObject result = db_repository::getInstance()->getStates();
@@ -44,180 +36,46 @@ void Service::onNewConnection() {
 
             } else if (requestObject["requestType"] == "addDevice") {
                 device device(requestObject["requestData"].toObject());
-                QJsonObject result = dbm->executeQuery("SELECT id FROM devices WHERE serial = ?", {device.serial});
-                if (result["status"] != "success") {
-                    qDebug() << "Can not execute query. message: " << result["message"];
-                    respond(clientSocket, QJsonDocument(result));
-                    return;
-                }
-                if (result["data"].toArray().size() != 0) {
-                    QJsonObject response;
-                    qDebug() << "Already exists while creating " + device.serial;
-                    response["status"] = "fail";
-                    response["message"] = "Already exists";
-                    QJsonDocument responseDoc(response);
-                    respond(clientSocket, responseDoc);
-                    return;
-                }
-
-                QJsonObject insertResult = dbm->executeQuery("INSERT INTO devices (serial, name, description, type) VALUES (?, ?, ?, ?)", {device.serial, device.name, device.description, device.type});
-                if (insertResult["status"] != "success") {
-                    qDebug() << "Can not execute query. message: " << insertResult["message"];
-                    respond(clientSocket, QJsonDocument(insertResult));
-                    return;
-                }
-                QJsonDocument responseDoc(insertResult);
+                QJsonObject result = db_repository::getInstance()->addDevice(device);
+                QJsonDocument responseDoc(result);
                 respond(clientSocket, responseDoc);
 
             } else if (requestObject["requestType"] == "editDevice") {
-                db.transaction();
-                deviceInfo deviceInfo(requestObject["requestData"].toObject());
-
-                QJsonObject result = dbm->executeQuery("SELECT id FROM devices WHERE serial = ? AND id != ?", {deviceInfo.serial, deviceInfo.id});
-                if (result["status"] != "success") {
-                    qDebug() << "Can not execute query. message: " << result["message"];
-                    respond(clientSocket, QJsonDocument(result));
-                    return;
-                }
-                if (!result["data"].toArray().empty()) {
-                    QJsonObject response;
-                    qDebug() << "Already exists with same serial while updating";
-                    response["status"] = "fail";
-                    response["message"] = "Already exists with same serial";
-                    QJsonDocument responseDoc(response);
-                    respond(clientSocket, responseDoc);
-                    return;
-                }
-                QJsonObject updateResult = dbm->executeQuery("UPDATE devices SET serial = ?, name = ?, description = ?, type = ? WHERE id = ? ", {deviceInfo.serial, deviceInfo.name, deviceInfo.description, deviceInfo.type, deviceInfo.id});
-                if (updateResult["status"] != "success") {
-                    qDebug() << "Can not execute query. message: " << updateResult["message"];
-                    respond(clientSocket, QJsonDocument(updateResult));
-                    return;
-                }
-                QJsonDocument responseDoc(updateResult);
+                QJsonObject requestData = requestObject["requestData"].toObject();
+                int id = requestData.value("id").toInt();
+                device device(requestData.value("device").toObject());
+                QJsonObject result = db_repository::getInstance()->editDevice(id, device);
+                QJsonDocument responseDoc(result);
                 respond(clientSocket, responseDoc);
 
             } else if (requestObject["requestType"] == "changeDevices") {
-                QJsonObject response;
-
-                dbm->beginTransaction();
-
-                QJsonObject result = dbm->executeQuery("DELETE FROM devices");
-                if (result["status"] != "success") {
-                    qDebug() << "Can not execute query. message: " << result["message"];
-                    respond(clientSocket, QJsonDocument(result));
-                    return;
-                }
-
-
-
                 QJsonArray jsonArray = requestObject["requestData"].toArray();
+                std::vector<device> devices(jsonArray.size());
+                int i = 0;
                 for (const QJsonValue &value : std::as_const(jsonArray)) {
-
-                    QJsonObject device = value.toObject();
-
-                    QJsonObject insertResult = dbm->executeQuery("INSERT INTO devices (serial, name, description, type) VALUES (?, ?, ?, ?)", {device.value("serial").toString(), device.value("name").toString(), device.value("description").toString(), device.value("type").toBool()});
-                    if (insertResult["status"] != "success") {
-                        qDebug() << "Can not execute query. message: " << insertResult["message"];
-                        dbm->rollbackTransaction();
-                        respond(clientSocket, QJsonDocument(insertResult));
-                        return;
-                    }
-                    qDebug() << "success";
-
+                    devices[i++] = device(value.toObject());
                 }
-
-                if(!dbm->commitTransaction()) {
-                    dbm->rollbackTransaction();
-                    QJsonObject response;
-                    qDebug() << "Cant commit, db closed";
-                    response["status"] = "fail";
-                    response["message"] = "Db closed";
-                    QJsonDocument responseDoc(response);
-                    respond(clientSocket, responseDoc);
-                    return;
-                }
-
-                respond(clientSocket, QJsonDocument(response));
+                QJsonObject result = db_repository::getInstance()->changeDevices(devices);
+                respond(clientSocket, QJsonDocument(result));
 
             } else if (requestObject["requestType"] == "showHistory") {
-                QJsonObject response;
-                QString sql =
-                    "SELECT "
-                    "   devices.serial, "
-                    "   devices.name, "
-                    "   log.prev_state, "
-                    "   log.new_state, "
-                    "   log.time "
-                    "FROM log "
-                    "INNER JOIN devices ON devices.id = log.device_id "
-                    "WHERE 1=1";
-
-                QVariantList params;
-
-                if (requestObject.contains("state")) {
-                    sql += " AND (log.prev_state = ? OR log.new_state = ?)";
-                    params << requestObject["state"].toInt() << requestObject["state"].toInt();
-                }
-                if (requestObject.contains("low")) {
-                    sql += " AND log.time > ?";
-                    params << QDateTime::fromString(requestObject["low"].toString(), Qt::ISODate);
-                }
-                if (requestObject.contains("high")) {
-                    sql += " AND log.time < ?";
-                    params << QDateTime::fromString(requestObject["high"].toString(), Qt::ISODate);
-                }
-                sql += " ORDER BY log.time";
-
-                QJsonObject result = dbm->executeQuery(sql, params);
-
-                if (result["status"] != "success") {
-                    qDebug() << "Query failed:" << result["message"];
-                    response["status"] = "fail";
-                } else {
-                    response["status"] = "success";
-                    response["data"] = result["data"];
-
-                }
-
-                QJsonDocument responseDoc(response);
+                QJsonObject logRequestObject = requestObject;
+                QJsonObject result = db_repository::getInstance()->getLog(logRequestObject);
+                QJsonDocument responseDoc(result);
                 respond(clientSocket, responseDoc);
+
             } else if (requestObject["requestType"] == "deleteDevice") {
-
-                QJsonObject response;
-
                 QJsonObject requestData = requestObject["requestData"].toObject();
                 int id = requestData["id"].toInt();
-
-                QJsonObject result = dbm->executeQuery("DELETE FROM devices WHERE id = ?", {id});
-                if (result["status"] != "success") {
-                    qDebug() << "Can not execute query. message: " << result["message"];
-                    respond(clientSocket, QJsonDocument(result));
-                    return;
-                }
-                if (result["rowsAffected"].toInt() == 0) {
-                    qDebug() << "Already deleted " + QString::number(id);
-                    response["status"] = "fail";
-                    response["message"] = "Already deleted";
-                    QJsonDocument responseDoc(response);
-                    respond(clientSocket, responseDoc);
-                    return;
-                }
-                response["status"] = "success";
-
-                QJsonDocument responseDoc(response);
+                QJsonObject result = db_repository::getInstance()->deleteDevice(id);
+                QJsonDocument responseDoc(result);
                 respond(clientSocket, responseDoc);
-
             }
-
         }
-
     });
-
 }
 
 void Service::respond(QTcpSocket *clientSocket, QJsonDocument responseDoc) {
-    ;
     QByteArray responseData = responseDoc.toJson();
 
     const int chunkSize = 1024;
