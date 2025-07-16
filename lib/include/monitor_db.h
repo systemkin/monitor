@@ -22,7 +22,8 @@ class MONITOR_DB_EXPORT MonitorDB : public QObject
     Q_OBJECT
 
 public:
-    static MonitorDB* getInstance(const QString& host, const QString& name, const QString& username, const QString& password, const int port);
+    static MonitorDB* initialize(const QString& host, const QString& name, const QString& username, const QString& password, const int port);
+    static MonitorDB* getInstance();
 
     QJsonObject executeQuery(const QString& query, const QVariantList& params = QVariantList());
 
@@ -31,6 +32,7 @@ public:
     bool rollbackTransaction();
 
 private:
+
     explicit MonitorDB(const QString& host, const QString& name, const QString& username, const QString& password, const int port, QObject *parent = nullptr);
     ~MonitorDB();
 

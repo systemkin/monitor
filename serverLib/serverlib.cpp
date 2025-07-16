@@ -2,7 +2,7 @@
 #include <monitor_db.h>
 
 #include <QDomDocument>
-
+#include "db_repository.h"
 Service::Service(MonitorDB* dbm, QObject *parent) : QTcpServer(parent) {
     connect(this, &QTcpServer::newConnection, this, &Service::onNewConnection);
 
@@ -38,12 +38,7 @@ void Service::onNewConnection() {
 
 
             if (requestObject["requestType"] == "getStates") {
-                QJsonObject result = dbm->executeQuery("SELECT devices.serial, devices.name, devices.description, devices.type, states.state, devices.id FROM states INNER JOIN devices ON devices.id = device_id");
-                if (result["status"] != "success") {
-                    qDebug() << "Can not execute query. message: " << result["message"];
-                    respond(clientSocket, QJsonDocument(result));
-                    return;
-                }
+                QJsonObject result = db_repository::getInstance()->getStates();
                 QJsonDocument responseDoc(result);
                 respond(clientSocket, responseDoc);
 

@@ -18,8 +18,9 @@
 #include <QFile>
 #include <QTextStream>
 #include "monitor_db.h"
-
-
+#include "historyItem.h"
+#include "device.h"
+#include "deviceInfo.h"
 class SERVERLIB_EXPORT Service :  public QTcpServer
 {
 public:

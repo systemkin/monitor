@@ -6,15 +6,30 @@ MonitorDB* MonitorDB::instance = nullptr;
 
 
 
-MonitorDB* MonitorDB::getInstance(const QString& host, const QString& name, const QString& username, const QString& password, const int port)
+MonitorDB* MonitorDB::initialize(const QString& host, const QString& name, const QString& username, const QString& password, const int port)
 {
     QMutexLocker locker(&instanceMutex);
 
-    if (!instance) instance = new MonitorDB(host, name, username, password, port);
+    if (!instance)
+    {
+        instance = new MonitorDB(host, name, username, password, port);
+        return instance;
+    }
+    qDebug() << "Already initialized";
     return instance;
 
 }
+MonitorDB* MonitorDB::getInstance()
+{
+    QMutexLocker locker(&instanceMutex);
 
+    if (!instance) {
+        qDebug() << "Must be initialized first";
+        return NULL;
+    }
+    return instance;
+
+}
 MonitorDB::MonitorDB(const QString& host, const QString& name, const QString& username, const QString& password, int port, QObject *parent) : QObject(parent) {
     dbConnection = QSqlDatabase::addDatabase("QPSQL");
     dbConnection.setHostName(host);
@@ -84,6 +99,7 @@ bool MonitorDB::beginTransaction()
     if (!dbConnection.isOpen()) return false;
 
     QSqlQuery sql(dbConnection);
+
     return sql.exec("BEGIN");
 }
 
@@ -104,3 +120,5 @@ bool MonitorDB::rollbackTransaction()
     QSqlQuery sql(dbConnection);
     return sql.exec("ROLLBACK");
 }
+
+

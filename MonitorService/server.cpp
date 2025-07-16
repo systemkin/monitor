@@ -119,8 +119,8 @@ Server::Server(QObject *parent) : QObject(parent) {
     db.setPassword(password);
     db.setPort(port);
 
-
-    dbm = MonitorDB::getInstance(host, name, username, password, port);
+    dbm = MonitorDB::initialize(host, name, username, password, port);
+    dbm = MonitorDB::getInstance();
 
     QFile* file = new QFile(filePath);
     QFile* bash = new QFile(bashPath);
