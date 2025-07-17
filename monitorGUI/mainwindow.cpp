@@ -25,12 +25,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView->setColumnWidth(1, 200);
 
+
+
     configReader reader;
     config = reader.get("/home/alexej/monitor/configGUI.xml");
 
     client = new tcpClient(config.host, config.port);
     connect(client, &tcpClient::requestCompleted,
             this, &MainWindow::onRequestCompleted);
+
+    connect(client, &tcpClient::errorOccurred, this, &MainWindow::onConnectionError);
 
     QJsonObject requestObj;
     requestObj["requestType"] = "getStates";
@@ -53,7 +57,9 @@ void MainWindow::on_pushButton_clicked()
 
     client->makeJsonRequest(requestObj);
 }
-
+void MainWindow::onConnectionError() {
+    QMessageBox::critical(nullptr, "Ошибка","Не удалось получить информацию от сервера",QMessageBox::Ok);
+}
 void MainWindow::onRequestCompleted(const QJsonObject &requestObject, const QJsonDocument &responseDoc) {
     QJsonObject responseObject = responseDoc.object();
     if (responseObject["status"] != "success") {

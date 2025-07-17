@@ -32,6 +32,7 @@ public:
 private slots:
 
     void onRequestCompleted(const QJsonObject &requestObject, const QJsonDocument &responseDoc);
+    void onConnectionError();
 
     void on_pushButton_clicked();
     void on_buttonAdd_clicked();

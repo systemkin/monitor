@@ -7,11 +7,16 @@ tcpClient::tcpClient(QString host, int port) {
     this->host = host;
     this->port = port;
 }
+
 void tcpClient::makeJsonRequest(QJsonObject requestObject) {
     QMutexLocker locker(&connectionMutex);
     QTcpSocket *socket = new QTcpSocket();
     socket->connectToHost(host, port);
+    connect(socket, &QTcpSocket::errorOccurred, this, [socket, this]() {
 
+        if (socket->errorString() != "The remote host closed the connection")
+            emit errorOccurred();
+    });
     connect(socket, &QTcpSocket::connected, this, [socket, requestObject]() {
         QJsonDocument requestDoc(requestObject);
         QByteArray requestData = requestDoc.toJson();

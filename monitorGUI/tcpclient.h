@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QMutex>
-
+#include <QAbstractSocket>
 class tcpClient : public QObject
 {
     Q_OBJECT
@@ -16,7 +16,7 @@ private:
     QMutex connectionMutex;
 signals:
     void requestCompleted(const QJsonObject &requestObject, const QJsonDocument &responseDoc);
-
+    void errorOccurred();
 };
 
 #endif // TCPCLIENT_H
