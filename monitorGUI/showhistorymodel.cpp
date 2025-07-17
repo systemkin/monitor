@@ -36,7 +36,7 @@ QVariant showHistoryModel::data(const QModelIndex &index, int role) const {
             return QString(container[index.row()].name);
             break;
         case 2:
-            switch(intToState(container[index.row()].prev_state)) {
+            switch(container[index.row()].prev_state) {
             case State::Undefined:
                 return QString("Неизвестно");
                 break;
@@ -55,7 +55,7 @@ QVariant showHistoryModel::data(const QModelIndex &index, int role) const {
             }
             break;
         case 3:
-            switch(intToState(container[index.row()].new_state)) {
+            switch(container[index.row()].new_state) {
             case State::Undefined:
                 return QString("Неизвестно");
                 break;
@@ -81,19 +81,19 @@ QVariant showHistoryModel::data(const QModelIndex &index, int role) const {
     }
     if ((role == Qt::ForegroundRole) && (index.column() == 2))  {
         switch(container[index.row()].prev_state) {
-        case 0: return QBrush(Qt::gray);
-        case 1: return QBrush(QColor(255, 165, 0));
-        case 2: return QBrush(Qt::red);
-        case 3: return QBrush(QColor(0, 125, 0));
+        case State::Undefined: return QBrush(Qt::gray);
+        case State::NotWorking: return QBrush(QColor(255, 165, 0));
+        case State::Failure: return QBrush(Qt::red);
+        case State::Working: return QBrush(QColor(0, 125, 0));
         default: return QBrush(Qt::gray);
         }
     }
     if ((role == Qt::ForegroundRole) && (index.column() == 3))  {
         switch(container[index.row()].new_state) {
-        case 0: return QBrush(Qt::gray);
-        case 1: return QBrush(QColor(255, 165, 0));
-        case 2: return QBrush(Qt::red);
-        case 3: return QBrush(QColor(0, 125, 0));
+        case State::Undefined: return QBrush(Qt::gray);
+        case State::NotWorking: return QBrush(QColor(255, 165, 0));
+        case State::Failure: return QBrush(Qt::red);
+        case State::Working: return QBrush(QColor(0, 125, 0));
         default: return QBrush(Qt::gray);
         }
     }

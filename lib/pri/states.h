@@ -12,9 +12,11 @@ enum class State {
 inline State intToState(int value) {
     return static_cast<State>(value);
 }
-inline QString stateToString(int value) {
-    State state = intToState(value);
-    switch(state) {
+inline int stateToInt(State value) {
+    return static_cast<int>(value);
+}
+inline QString stateToString(State value) {
+    switch(value) {
     case State::Undefined:  return "Неопределено";
     case State::NotWorking: return "Не работает";
     case State::Failure:    return "Авария";

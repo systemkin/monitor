@@ -4,6 +4,7 @@
 #include <QObject>
 #include "monitor_db.h"
 #include "device.h"
+#include "states.h"
 /*!
  * \brief Singleton for viewing and editing database
  */
@@ -55,6 +56,8 @@ public:
      * \return JSON-object with "status", that can be "fail" or "success". and "cause" if "status" is "fail".
      */
     QJsonObject changeDevices(std::vector<device> devices);
+
+    QJsonObject updateState(int id, State state);
 
 private:
 

@@ -11,14 +11,14 @@ struct deviceInfo {
     QString name;
     QString description;
     bool type;
-    int state;
+    State state;
     deviceInfo() {
         id = -1;
         serial = "";
         name = "";
         description = "";
         type = false;
-        state = 0;
+        state = State::Undefined;
     };
 
     bool operator==(const deviceInfo& other) const {
@@ -37,7 +37,7 @@ struct deviceInfo {
         name = jsonDeviceInfo.value("name").toString();
         description = jsonDeviceInfo.value("description").toString();
         type = jsonDeviceInfo.value("type").toBool();
-        state = jsonDeviceInfo.value("state").toInt();
+        state = intToState(jsonDeviceInfo.value("state").toInt());
     }
     /*!
      * \brief creates QString representation of a device for export to text files

@@ -20,7 +20,10 @@ addDeviceForm::addDeviceForm(QString serial, QString name, QString description, 
     ui->lineEdit->setText(serial);
     ui->lineEdit_2->setText(name);
     ui->lineEdit_3->setText(description);
+
     ui->comboBox->addItems({"bash", "Файл"});
+    if (type) ui->comboBox->setCurrentIndex(0);
+    else ui->comboBox->setCurrentIndex(1);
 }
 
 

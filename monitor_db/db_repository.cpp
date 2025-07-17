@@ -155,3 +155,11 @@ QJsonObject db_repository::changeDevices(std::vector<device> devices) {
     response["status"] = "success";
     return response;
 }
+
+QJsonObject db_repository::updateState(int id, State state) {
+    QJsonObject updateResult = MonitorDB::getInstance()->executeQuery("UPDATE devices SET state = ? WHERE id = ? ", {stateToInt(state), id});
+    if (updateResult["status"] != "success") {
+        qDebug() << "Can not execute query. message: " << updateResult["message"];
+    }
+    return updateResult;
+}

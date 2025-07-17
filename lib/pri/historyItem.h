@@ -1,3 +1,4 @@
+#include "states.h"
 #include <QJsonObject>
 #include <QObject>
 
@@ -7,8 +8,8 @@
 struct historyItem {
     QString serial;
     QString name;
-    int prev_state;
-    int new_state;
+    State prev_state;
+    State new_state;
     QString dateTime;
     /*!
      * \brief creates object from json
@@ -19,8 +20,8 @@ struct historyItem {
         return historyItem({
             jsonHistoryItem.value("serial").toString(),
             jsonHistoryItem.value("name").toString(),
-            jsonHistoryItem.value("prev_state").toInt(),
-            jsonHistoryItem.value("new_state").toInt(),
+            intToState(jsonHistoryItem.value("prev_state").toInt()),
+            intToState(jsonHistoryItem.value("new_state").toInt()),
             jsonHistoryItem.value("dateTime").toString(),
         });
     }

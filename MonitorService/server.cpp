@@ -115,17 +115,17 @@ Server::Server(QObject *parent) : QObject(parent) {
     dbm = MonitorDB::getInstance();
 
     QFile* file = new QFile(filePath);
-    QFile* bash = new QFile(bashPath);
-
     if (!file->open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << filePath;
         qDebug() << "No such data file or Error during opening" << file->errorString();
         return;
     }
+    file->close();
+    delete file;
 
 
     refresherThread = new QThread(nullptr);
-    refresher = new Refresher(dbm, file, bash);
+    refresher = new Refresher(filePath, bashPath, nullptr);
     refresher->moveToThread(refresherThread);
 
     connect(refresherThread, &QThread::started, refresher, [this, timer]() {

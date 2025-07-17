@@ -1,10 +1,14 @@
 #include "refresherlib.h"
 #include <QProcess>
+#include "db_repository.h"
+#include "deviceInfo.h"
+#include "states.h"
 
-
-Refresher::Refresher(MonitorDB* dbm, QFile* dataFile, QFile* bashFile,QObject* parent)
-    : QObject(parent), m_dbm(dbm), dataFile(dataFile), bashFile(bashFile)
+Refresher::Refresher(QString dataPath, QString bashPath,QObject* parent)
+    : QObject(parent)
 {
+    this->dataPath = dataPath;
+    this->bashPath = bashPath;
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Refresher::refreshStates);
 }
@@ -20,46 +24,52 @@ void Refresher::start(int time)
 
 void Refresher::stop()
 {
-    dataFile->close();
-    bashFile->close();
     timer->stop();
 }
 
-int Refresher::getState(QString serial, bool type)
+State Refresher::getState(QString serial, bool type)
 {
     if (type) {
         QProcess process;
-        process.start("bash", QStringList() << bashFile->fileName() << serial << dataFile->fileName());
+        process.start("bash", QStringList() << bashPath << serial << dataPath);
         if (!process.waitForFinished()) {
             qDebug() << "Script execution error";
-            return 0;
+            return State::Undefined;
         }
 
         QByteArray output = process.readAllStandardOutput();
         bool ok;
         int state = output.trimmed().toInt(&ok);
-        if (ok) return state;
-        else return 0;
+        if (ok) return intToState(state);
+        else {
+            qDebug() << "Troubles with parsing, probably bash or datafile is not acessible or file data format error";
+            return State::Undefined;
+        }
     }
     else {
-        QTextStream in(dataFile);
-        dataFile->seek(0);
+        QFile dataFile(dataPath);
+        if(!dataFile.open(QIODevice::ReadOnly)) {
+            qDebug() << "Cant open data file";
+            return State::Undefined;
+        }
+        QTextStream in(&dataFile);
+        dataFile.seek(0);
         while (!in.atEnd()) {
 
             QString line = in.readLine();
             QStringList stringList = line.split(" ");
 
             if (stringList[0] == serial) {
-                return stringList[1].toInt();
+                return intToState(stringList[1].toInt());
             }
         }
-        return 0;
+        return State::Undefined;
     }
 }
 
 void Refresher::refreshStates()
 {
-    QJsonObject result = m_dbm->executeQuery("SELECT devices.id, devices.serial, states.state, devices.type FROM devices LEFT JOIN states ON devices.id = states.device_id");
+    QJsonObject result = db_repository::getInstance()->getStates();
 
     if (result["status"] != "success") {
         qDebug() << "Can not execute query. message: " << result["message"];
@@ -68,17 +78,15 @@ void Refresher::refreshStates()
 
     QJsonArray devices = result["data"].toArray();
     for (const QJsonValue& deviceValue : std::as_const(devices)) {
-        QJsonObject device = deviceValue.toObject();
-        QString serial = device["serial"].toString();
-        int dbState = device["state"].toInt();
-        bool type = device["type"].toBool();
-        int currState = getState(serial, type);
+        deviceInfo device(deviceValue.toObject());
 
-        if (currState != dbState) {
-            QJsonObject updateResult = m_dbm->executeQuery("UPDATE states SET state = ? WHERE device_id = ?", {currState, device["id"].toInt()});
-            qDebug() << "changed to: " << currState << " from" << dbState;
+        State currState = getState(device.serial, device.type);
+
+        if (currState != device.state) {
+            device.state = currState;
+            QJsonObject updateResult = db_repository::getInstance()->updateState(device.id, currState);
             if (updateResult["status"] != "success") {
-                qDebug() << "Update failed, problem with device: " << device["id"].toInt();
+                qDebug() << "Update failed, problem with device: " << device.id;
                 return;
             }
         }
