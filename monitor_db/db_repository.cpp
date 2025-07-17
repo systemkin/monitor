@@ -127,7 +127,6 @@ QJsonObject db_repository::deleteDevice(int id) {
 QJsonObject db_repository::changeDevices(std::vector<device> devices) {
     QJsonObject response;
 
-    MonitorDB::getInstance()->beginTransaction();
 
     QJsonObject result = MonitorDB::getInstance()->executeQuery("DELETE FROM devices");
     if (result["status"] != "success") {
@@ -138,26 +137,17 @@ QJsonObject db_repository::changeDevices(std::vector<device> devices) {
         QJsonObject insertResult = MonitorDB::getInstance()->executeQuery("INSERT INTO devices (serial, name, description, type) VALUES (?, ?, ?, ?)", {device.serial, device.name, device.description, device.type});
         if (insertResult["status"] != "success") {
             qDebug() << "Can not execute query. message: " << insertResult["message"];
-            MonitorDB::getInstance()->rollbackTransaction();
+
             return insertResult;
         }
 
-    }
-
-    if(!MonitorDB::getInstance()->commitTransaction()) {
-        MonitorDB::getInstance()->rollbackTransaction();
-        QJsonObject response;
-        qDebug() << "Cant commit, db closed";
-        response["status"] = "fail";
-        response["message"] = "Db closed";
-        return response;
     }
     response["status"] = "success";
     return response;
 }
 
 QJsonObject db_repository::updateState(int id, State state) {
-    QJsonObject updateResult = MonitorDB::getInstance()->executeQuery("UPDATE devices SET state = ? WHERE id = ? ", {stateToInt(state), id});
+    QJsonObject updateResult = MonitorDB::getInstance()->executeQuery("UPDATE states SET state = ? WHERE device_id = ? ", {stateToInt(state), id});
     if (updateResult["status"] != "success") {
         qDebug() << "Can not execute query. message: " << updateResult["message"];
     }

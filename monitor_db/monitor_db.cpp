@@ -93,32 +93,5 @@ QJsonObject MonitorDB::executeQuery(const QString& query, const QVariantList& pa
     return result;
 }
 
-bool MonitorDB::beginTransaction()
-{
-    QMutexLocker locker(&dbMutex);
-    if (!dbConnection.isOpen()) return false;
-
-    QSqlQuery sql(dbConnection);
-
-    return sql.exec("BEGIN");
-}
-
-bool MonitorDB::commitTransaction()
-{
-    QMutexLocker locker(&dbMutex);
-    if (!dbConnection.isOpen()) return false;
-
-    QSqlQuery sql(dbConnection);
-    return sql.exec("COMMIT");
-}
-
-bool MonitorDB::rollbackTransaction()
-{
-    QMutexLocker locker(&dbMutex);
-    if (!dbConnection.isOpen()) return false;
-
-    QSqlQuery sql(dbConnection);
-    return sql.exec("ROLLBACK");
-}
 
 

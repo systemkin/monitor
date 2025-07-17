@@ -13,6 +13,7 @@ include(../structs.pri)
 
 SOURCES += \
     adddeviceform.cpp \
+    configreader.cpp \
     deviceinfomodel.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -22,6 +23,7 @@ SOURCES += \
 
 HEADERS += \
     adddeviceform.h \
+    configreader.h \
     deviceinfomodel.h \
     mainwindow.h \
     showhistoryform.h \

@@ -79,9 +79,7 @@ void Refresher::refreshStates()
     QJsonArray devices = result["data"].toArray();
     for (const QJsonValue& deviceValue : std::as_const(devices)) {
         deviceInfo device(deviceValue.toObject());
-
         State currState = getState(device.serial, device.type);
-
         if (currState != device.state) {
             device.state = currState;
             QJsonObject updateResult = db_repository::getInstance()->updateState(device.id, currState);

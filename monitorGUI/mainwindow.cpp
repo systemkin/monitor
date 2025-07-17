@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "adddeviceform.h"
+#include "configreader.h"
 #include "deviceinfomodel.h"
 #include "showhistoryform.h"
 #include "states.h"
@@ -17,56 +18,6 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-
-    QFile config("/home/alexej/monitor/configGUI.xml");
-    if (!config.open(QIODevice::ReadOnly)) {
-        qDebug() << "Failed to open config file";
-        return;
-    }
-    QDomDocument doc;
-    if (!doc.setContent(&config)) {
-        qDebug() << "Failed to parse XML config file";
-        config.close();
-        return;
-    }
-    config.close();
-
-    QDomElement root = doc.documentElement();
-    QDomElement connection = root.firstChildElement("connection");
-
-    if (connection.isNull()) {
-        qDebug() << "No field 'connection' in file";
-        return;
-    }
-    QDomElement hostElem = connection.firstChildElement("host");
-    QDomElement portElem = connection.firstChildElement("port");
-
-    if (!hostElem.isNull()) {
-        host = hostElem.text();
-    } else {
-        qDebug() << "No field 'connection.host' in file";
-        return;
-    }
-
-    if (portElem.isNull()) {
-        qDebug() << "No field 'connection.port' in file";
-        return;
-    }
-
-    bool ok;
-    port = portElem.text().toInt(&ok);
-    if (!ok) {
-        qDebug() << "Invalid field 'connection.port in file";
-        return;
-    }
-
-    client = new tcpClient(host, port);
-    connect(client, &tcpClient::requestCompleted,
-            this, &MainWindow::onRequestCompleted);
-
-
-
-
     ui->setupUi(this);
     model = new DeviceInfoModel();
     ui->tableView->setModel(model);
@@ -74,13 +25,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView->setColumnWidth(1, 200);
 
+    configReader reader;
+    config = reader.get("/home/alexej/monitor/configGUI.xml");
 
-
-
-
-
-
-
+    client = new tcpClient(config.host, config.port);
+    connect(client, &tcpClient::requestCompleted,
+            this, &MainWindow::onRequestCompleted);
 
     QJsonObject requestObj;
     requestObj["requestType"] = "getStates";
@@ -105,7 +55,13 @@ void MainWindow::on_pushButton_clicked()
 }
 
 void MainWindow::onRequestCompleted(const QJsonObject &requestObject, const QJsonDocument &responseDoc) {
+    QJsonObject responseObject = responseDoc.object();
+    if (responseObject["status"] != "success") {
+        QMessageBox::critical(nullptr, "Ошибка","Не удалось получить информацию от сервера",QMessageBox::Ok);
+        return;
+    }
     if (requestObject["requestType"] == "getStates") {
+
         QJsonObject response = responseDoc.object();
         QJsonArray responseArray = response.value("data").toArray();
         std::vector<deviceInfo> container = std::vector<deviceInfo>(responseArray.size());
@@ -175,6 +131,7 @@ void MainWindow::on_buttonChange_clicked()
 
     QList<QModelIndex> list( ui->tableView->selectionModel()->selectedRows() );
     if(list.size() != 1) {
+        QMessageBox::information(nullptr, "Информация","Выделите строку",QMessageBox::Ok);
         return;
     }
     int row = list.at(0).row();
@@ -216,13 +173,6 @@ void MainWindow::on_buttonAdd_2_clicked()
     form->exec();
 }
 
-QString MainWindow::getHost() {
-    return host;
-}
-int MainWindow::getPort() {
-    return port;
-}
-
 void MainWindow::on_buttonExport_clicked()
 {
     QString fileName = QFileDialog::getSaveFileName(this,
@@ -259,7 +209,10 @@ void MainWindow::on_buttonExport_clicked()
 
 
 void MainWindow::on_buttonAdd_3_clicked() {
-
+    QMessageBox::StandardButton reply = QMessageBox::critical(this, "Внимание", "Это действие удалит существующие данные", QMessageBox::Ok | QMessageBox::No);
+    if (reply != QMessageBox::Ok) {
+        return;
+    }
     QString fileName = QFileDialog::getOpenFileName(this,
         "Выберите файл",
         QDir::homePath(),

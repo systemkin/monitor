@@ -1,0 +1,41 @@
+#ifndef CONFIGREADER_H
+#define CONFIGREADER_H
+
+#include <QObject>
+struct Database{
+    QString host = "";
+    QString name = "";
+    QString username = "";
+    QString password = "";
+    int port = 0;
+};
+struct Control{
+    int time = 0;
+    QString bash = "";
+    QString file = "";
+};
+struct Config {
+    Database database;
+    Control control;
+};
+/*!
+ * \brief class for readling config of server application
+ */
+class configReader : QObject
+{
+    Q_OBJECT
+public:
+    /*!
+     * \brief constructor
+     */
+    configReader();
+
+    /*!
+     * \brief get
+     * \param function to read config from file
+     * \return readed config
+     */
+    Config get(QString configFile);
+};
+
+#endif // CONFIGREADER_H

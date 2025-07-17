@@ -27,10 +27,6 @@ public:
 
     QJsonObject executeQuery(const QString& query, const QVariantList& params = QVariantList());
 
-    bool beginTransaction();
-    bool commitTransaction();
-    bool rollbackTransaction();
-
 private:
 
     explicit MonitorDB(const QString& host, const QString& name, const QString& username, const QString& password, const int port, QObject *parent = nullptr);
@@ -41,7 +37,6 @@ private:
 
     QMutex dbMutex;
     QSqlDatabase dbConnection;
-
 };
 
 #endif // MONITOR_DB_H

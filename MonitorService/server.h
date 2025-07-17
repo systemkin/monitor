@@ -16,6 +16,7 @@
 #include <QTimer>
 #include <QFile>
 #include <QTextStream>
+#include "configreader.h"
 #include "monitor_db.h"
 #include "refresherlib.h"
 #include "serverlib.h"
@@ -32,7 +33,7 @@ public:
     Service* service;
 
     MonitorDB* dbm;
-
+    Config config;
 };
 
 #endif // SERVER_H

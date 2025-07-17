@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "./ui_mainwindow.h"
+#include "configreader.h"
 #include "deviceinfomodel.h"
 #include "tcpclient.h"
 
@@ -42,8 +43,7 @@ private slots:
     void on_buttonExport_2_clicked();
 
 private:
-    QString host;
-    int port;
+    Config config;
     Ui::MainWindow *ui;
 
 

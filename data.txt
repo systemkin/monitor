@@ -1,6 +1,8 @@
-aa-23 0
-AAAA 3
-bb 2
-d 1
-asd 2
-aaa 3
+aa-23 1
+AAAA 0
+bb 3
+d 2
+asd 3
+aaa 0
+bb 1
+vvv 2
