@@ -115,7 +115,7 @@ QJsonObject db_repository::deleteDevice(int id) {
     }
     if (result["rowsAffected"].toInt() == 0) {
         qDebug() << "Already deleted " + QString::number(id);
-        response["status"] = "fail";
+        response["status"] = "success";
         response["message"] = "Already deleted";
         return response;
     }

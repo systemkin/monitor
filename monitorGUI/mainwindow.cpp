@@ -63,6 +63,7 @@ void MainWindow::onConnectionError() {
 void MainWindow::onRequestCompleted(const QJsonObject &requestObject, const QJsonDocument &responseDoc) {
     QJsonObject responseObject = responseDoc.object();
     if (responseObject["status"] != "success") {
+        qDebug() << responseObject;
         QMessageBox::critical(nullptr, "Ошибка","Не удалось получить информацию от сервера",QMessageBox::Ok);
         return;
     }
@@ -96,10 +97,10 @@ void MainWindow::onRequestCompleted(const QJsonObject &requestObject, const QJso
 
     } else if (requestObject["requestType"] == "deleteDevice") {
         QJsonObject response = responseDoc.object();
-        if (response.value("status") == "success")
-            QMessageBox::information(nullptr, "Информация","Успешно удалено",QMessageBox::Ok);
-        else if ((response.value("status") == "fail") &&  (response.value("message") == "Already deleted"))
+        if ((response.value("status") == "success") && (response.value("message") == "Already deleted"))
             QMessageBox::information(nullptr, "Информация","Уже удалено (обновите чтобы увидеть изменения)",QMessageBox::Ok);
+        else if (response.value("status") == "success")
+            QMessageBox::information(nullptr, "Информация", "Успешно удалено", QMessageBox::Ok);
         return;
 
     } else if (requestObject["requestType"] == "changeDevices") {

@@ -74,6 +74,7 @@ QJsonObject MonitorDB::executeQuery(const QString& query, const QVariantList& pa
         result["message"] = sql.lastError().text();
         return result;
     }
+    result["rowsAffected"] = sql.numRowsAffected();
     result["status"] = "success";
 
     if (!sql.isSelect()) return result;
@@ -87,7 +88,7 @@ QJsonObject MonitorDB::executeQuery(const QString& query, const QVariantList& pa
         queryResult.append(line);
     }
     result["data"] = queryResult;
-    result["rowsAffected"] = sql.numRowsAffected();
+
 
 
     return result;
