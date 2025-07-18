@@ -47,24 +47,24 @@ void showHistoryForm::onRequestCompleted(const QJsonObject &requestObject, const
 
         }
         delete model;
-        model = new showHistoryModel(container.size(), 5, container);
+        model = new showHistoryModel(container);
         ui->tableView->setModel(model);
 
     }
 }
 
-void showHistoryForm::on_pushButton_clicked()
+void showHistoryForm::on_pushButton_request_clicked()
 {
     QJsonObject requestObj;
     requestObj["requestType"] = "showHistory";
-    if(ui->checkBox->isChecked()) requestObj["low"] = ui->dateTimeEdit->dateTime().toString("yyyy-MM-ddTHH:mm:ss.zzz");
-    if(ui->checkBox_2->isChecked()) requestObj["high"] = ui->dateTimeEdit_2->dateTime().toString("yyyy-MM-ddTHH:mm:ss.zzz");
-    if(ui->checkBox_3->isChecked()) requestObj["state"] = ui->comboBox->currentIndex();
+    if(ui->checkBox_low->isChecked()) requestObj["low"] = ui->dateTimeEdit->dateTime().toString("yyyy-MM-ddTHH:mm:ss.zzz");
+    if(ui->checkBox_high->isChecked()) requestObj["high"] = ui->dateTimeEdit_2->dateTime().toString("yyyy-MM-ddTHH:mm:ss.zzz");
+    if(ui->checkBox_state->isChecked()) requestObj["state"] = ui->comboBox->currentIndex();
     client->makeJsonRequest(requestObj);
 }
 
 
-void showHistoryForm::on_pushButton_2_clicked()
+void showHistoryForm::on_pushButton_print_clicked()
 {
     QString fileName = QFileDialog::getSaveFileName(this,
         "Выберите файл",
@@ -108,9 +108,7 @@ void showHistoryForm::exportToPDF(const QString &fileName, const std::vector<his
     doc.print(&printer);
     QMessageBox::information(this, "Информация", "Данные экспортированы в PDF");
 }
-std::vector<historyItem> showHistoryForm::getContainerCopy() {
-    return container;
-}
+
 void showHistoryForm::exportToText(const QString &fileName, const std::vector<historyItem>& container)
 {
     QFile file(fileName);

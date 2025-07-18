@@ -17,9 +17,9 @@ addDeviceForm::addDeviceForm(QString serial, QString name, QString description, 
     if (type)
         ui->comboBox->setCurrentIndex(0);
     else ui->comboBox->setCurrentIndex(1);
-    ui->lineEdit->setText(serial);
-    ui->lineEdit_2->setText(name);
-    ui->lineEdit_3->setText(description);
+    ui->lineEdit_serial->setText(serial);
+    ui->lineEdit_name->setText(name);
+    ui->lineEdit_description->setText(description);
 
     ui->comboBox->addItems({"bash", "Файл"});
     if (type) ui->comboBox->setCurrentIndex(0);
@@ -35,18 +35,19 @@ bool addDeviceForm::getType() {
     return (ui->comboBox->currentIndex() == 0);
 }
 QString addDeviceForm::getSerial() {
-    return ui->lineEdit->text();
+    return ui->lineEdit_serial->text();
 }
 QString addDeviceForm::getName() {
-    return ui->lineEdit_2->text();
+    return ui->lineEdit_name->text();
 }
 QString addDeviceForm::getDescription() {
-    return ui->lineEdit_3->text();
+    return ui->lineEdit_description->text();
 }
 device addDeviceForm::getDevice() {
     return device(this->getSerial(), this->getName(), this->getDescription(), this->getType());
 }
-void addDeviceForm::on_pushButton_2_clicked()
+
+void addDeviceForm::on_pushButton_ok_clicked()
 {
     if (this->getName().contains(",") || this->getSerial().contains(",") || this->getDescription().contains(",")) {
         QMessageBox::critical(this, "Ошибка", "Наименование, описание или серийный номер не может содержать символ ','");
@@ -57,7 +58,7 @@ void addDeviceForm::on_pushButton_2_clicked()
 }
 
 
-void addDeviceForm::on_pushButton_clicked()
+void addDeviceForm::on_pushButton_no_clicked()
 {
     discarded = true;
     this->close();

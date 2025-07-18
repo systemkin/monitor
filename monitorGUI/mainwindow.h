@@ -19,6 +19,9 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
+/*!
+ * \brief class of main application windor
+ */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -26,37 +29,106 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    QString getHost();
-    int getPort();
 
 private slots:
-
+    /*!
+     * \brief slot to serve completed tcp requests
+     * \param requestObject - obect used to generate request
+     * \param responseDoc - response from server
+     */
     void onRequestCompleted(const QJsonObject &requestObject, const QJsonDocument &responseDoc);
+
+    /*!
+     * \brief slot to handle tcp errors
+     */
     void onConnectionError();
 
-    void on_pushButton_clicked();
+    /*!
+     * \brief slot to handle adding device to tracking
+     */
     void on_buttonAdd_clicked();
+
+    /*!
+     * \brief slot to handle updating device
+     */
     void on_buttonChange_clicked();
+
+    /*!
+     * \brief slot to handle deleting device
+     */
     void on_buttonDelete_clicked();
-    void on_buttonAdd_2_clicked();
+
+    /*!
+     * \brief slot to handle export current devices to file
+     */
     void on_buttonExport_clicked();
-    void on_buttonAdd_3_clicked();
-    void on_buttonExport_2_clicked();
+
+    /*!
+     * \brief slot to handle export current devices to heuman-readable format
+     */
+    void on_buttonPrint_clicked();
+
+    /*!
+     * \brief slot to handle refreshing info about devices
+     */
+    void on_buttonRefresh_clicked();
+
+    /*!
+     * \brief slot to handle showing log
+     */
+    void on_buttonHistory_clicked();
+
+    /*!
+     * \brief slot to handle importing devices from data
+     */
+    void on_buttonImport_clicked();
 
 private:
     Config config;
     Ui::MainWindow *ui;
-
-
     DeviceInfoModel* model;
 
+    /*!
+     * \brief function for saving vector of deviceInfo to different data formats
+     * \param container - data to save
+     * \param filename - file where to save
+     */
     void saveToFile(const std::vector<deviceInfo>& container, const QString& filename);
-    void exportToPDF(const QString &fileName, const std::vector<deviceInfo>& container);
-    void exportToText(const QString &fileName, const std::vector<deviceInfo>& container);
-    void exportToCSV(const QString &fileName, const std::vector<deviceInfo>& container);
-    void exportToHTML(const QString &fileName, const std::vector<deviceInfo>& container);
-    QString generateHTMLTable(const std::vector<deviceInfo>& container);
 
+    /*!
+     * \brief function for saving vector of deviceInfo to PDF
+     * \param fileName - file where to save
+     * \param container - data to save
+     */
+    void exportToPDF(const QString &fileName, const std::vector<deviceInfo>& container);
+
+    /*!
+     * \brief function for saving vector of deviceInfo to text
+     * \param fileName - file where to save
+     * \param container - data to save
+     */
+    void exportToText(const QString &fileName, const std::vector<deviceInfo>& container);
+
+    /*!
+     * \brief function for saving vector of deviceInfo to CSV
+     * \param fileName - file where to save
+     * \param container - data to save
+     */
+    void exportToCSV(const QString &fileName, const std::vector<deviceInfo>& container);
+
+    /*!
+     * \brief function for saving vector of deviceInfoto HTML
+     * \param fileName - file where to save
+     * \param container - data to save
+     */
+    void exportToHTML(const QString &fileName, const std::vector<deviceInfo>& container);
+
+    /*!
+     * \brief function for generating HTML-table from vector of deviceInfo
+     * \param fileName - file where to save
+     * \param container - data to save
+     */
+    QString generateHTMLTable(const std::vector<deviceInfo>& container);
 
     tcpClient *client;
 };

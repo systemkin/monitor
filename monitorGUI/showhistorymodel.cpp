@@ -11,10 +11,10 @@ showHistoryModel::showHistoryModel()
     container = std::vector<historyItem>();
 }
 
-showHistoryModel::showHistoryModel(int rows, int columns, std::vector<historyItem> container) {
+showHistoryModel::showHistoryModel(std::vector<historyItem> container) {
 
-    this->rows = rows;
-    this->columns = columns;
+    this->rows = container.size();
+    this->columns = 5;
     this->container = container;
 }
 

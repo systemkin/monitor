@@ -17,51 +17,51 @@
    <item>
     <layout class="QFormLayout" name="formLayout">
      <item row="0" column="0">
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="label_serial">
        <property name="text">
         <string>Серийный номер</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="lineEdit_serial"/>
      </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="label_name">
        <property name="text">
         <string>Наименование</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="lineEdit_2"/>
+      <widget class="QLineEdit" name="lineEdit_name"/>
      </item>
      <item row="2" column="0">
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="label_description">
        <property name="text">
         <string>Описание</string>
        </property>
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QLineEdit" name="lineEdit_3"/>
+      <widget class="QLineEdit" name="lineEdit_description"/>
      </item>
      <item row="3" column="0">
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="label_type">
        <property name="text">
         <string>Тип</string>
        </property>
       </widget>
      </item>
      <item row="5" column="0">
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="pushButton_no">
        <property name="text">
         <string>Отмена</string>
        </property>
       </widget>
      </item>
      <item row="5" column="1">
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="pushButton_ok">
        <property name="text">
         <string>Ок</string>
        </property>

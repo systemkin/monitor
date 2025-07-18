@@ -7,34 +7,86 @@
 namespace Ui {
 class showHistoryForm;
 }
-
+/*!
+ * \brief Form to display log and tied buttons
+ */
 class showHistoryForm : public QDialog
 {
     Q_OBJECT
 
 public:
+    /*!
+     * \brief construcor
+     * \param client - tcpClient to be used for conenction with server
+     * \param parent
+     */
     explicit showHistoryForm(tcpClient *client, MainWindow *parent = nullptr);
     ~showHistoryForm();
 
 private slots:
-    void on_pushButton_clicked();
-    void on_pushButton_2_clicked();
+    /*!
+     * \brief slot for serving click on button for printing
+     */
+    void on_pushButton_print_clicked();
+
+    /*!
+     * \brief slot for serving click on button for refreshing
+     */
+    void on_pushButton_request_clicked();
 
 private:
 
     Ui::showHistoryForm *ui;
+    /*!
+     * \brief functiion to serve completed tcp requests
+     * \param requestObject - obect used to generate request
+     * \param responseDoc - response from server
+     */
     void onRequestCompleted(const QJsonObject &requestObject, const QJsonDocument &responseDoc);
     std::vector<historyItem> container;
     showHistoryModel* model;
 
+    /*!
+     * \brief function for saving vector of historyItem to different data formats
+     * \param container - data to save
+     * \param filename - file where to save
+     */
     void saveToFile(const std::vector<historyItem>& container, const QString& filename);
-    void exportToPDF(const QString &fileName, const std::vector<historyItem>& container);
-    void exportToText(const QString &fileName, const std::vector<historyItem>& container);
-    void exportToCSV(const QString &fileName, const std::vector<historyItem>& container);
-    void exportToHTML(const QString &fileName, const std::vector<historyItem>& container);
-    QString generateHTMLTable(const std::vector<historyItem>& container);
 
-    std::vector<historyItem> getContainerCopy();
+    /*!
+     * \brief function for saving vector of historyItem to PDF
+     * \param fileName - file where to save
+     * \param container - data to save
+     */
+    void exportToPDF(const QString &fileName, const std::vector<historyItem>& container);
+
+    /*!
+     * \brief function for saving vector of historyItem to text
+     * \param fileName - file where to save
+     * \param container - data to save
+     */
+    void exportToText(const QString &fileName, const std::vector<historyItem>& container);
+
+    /*!
+     * \brief function for saving vector of historyItem to CSV
+     * \param fileName - file where to save
+     * \param container - data to save
+     */
+    void exportToCSV(const QString &fileName, const std::vector<historyItem>& container);
+
+    /*!
+     * \brief function for saving vector of historyItem to HTML
+     * \param fileName - file where to save
+     * \param container - data to save
+     */
+    void exportToHTML(const QString &fileName, const std::vector<historyItem>& container);
+
+    /*!
+     * \brief function for generating HTML-table from vector of historyItem
+     * \param fileName - file where to save
+     * \param container - data to save
+     */
+    QString generateHTMLTable(const std::vector<historyItem>& container);
 
     tcpClient *client;
 };

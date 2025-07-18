@@ -57,14 +57,14 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="buttonAdd_3">
+           <widget class="QPushButton" name="buttonImport">
             <property name="text">
              <string>Импорт</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="buttonExport_2">
+           <widget class="QPushButton" name="buttonPrint">
             <property name="text">
              <string>Печать</string>
             </property>
@@ -126,14 +126,14 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="buttonRefresh">
             <property name="text">
              <string>Обновить</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="buttonAdd_2">
+           <widget class="QPushButton" name="buttonHistory">
             <property name="text">
              <string>История</string>
             </property>

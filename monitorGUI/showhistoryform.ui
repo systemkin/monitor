@@ -22,7 +22,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QCheckBox" name="checkBox">
+        <widget class="QCheckBox" name="checkBox_low">
          <property name="text">
           <string>С</string>
          </property>
@@ -32,7 +32,7 @@
         <widget class="QDateTimeEdit" name="dateTimeEdit"/>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkBox_2">
+        <widget class="QCheckBox" name="checkBox_high">
          <property name="layoutDirection">
           <enum>Qt::LeftToRight</enum>
          </property>
@@ -45,7 +45,7 @@
         <widget class="QDateTimeEdit" name="dateTimeEdit_2"/>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkBox_3">
+        <widget class="QCheckBox" name="checkBox_state">
          <property name="text">
           <string>Состояние</string>
          </property>
@@ -57,14 +57,14 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="pushButton_print">
            <property name="text">
             <string>Печать</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="pushButton_request">
            <property name="text">
             <string>Запросить</string>
            </property>

@@ -11,10 +11,10 @@ DeviceInfoModel::DeviceInfoModel()
     container = std::vector<deviceInfo>();
 }
 
-DeviceInfoModel::DeviceInfoModel(int rows, int columns, std::vector<deviceInfo> container) {
+DeviceInfoModel::DeviceInfoModel(std::vector<deviceInfo> container) {
 
-    this->rows = rows;
-    this->columns = columns;
+    this->rows = container.size();
+    this->columns = 6;
     this->container = container;
 }
 

@@ -48,13 +48,10 @@ MainWindow::~MainWindow()
 
 
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_buttonRefresh_clicked()
 {
-
     QJsonObject requestObj;
     requestObj["requestType"] = "getStates";
-
-
     client->makeJsonRequest(requestObj);
 }
 void MainWindow::onConnectionError() {
@@ -78,7 +75,7 @@ void MainWindow::onRequestCompleted(const QJsonObject &requestObject, const QJso
             container[i++] = device;
         }
         delete model;
-        model = new DeviceInfoModel(container.size(), 6, container);
+        model = new DeviceInfoModel(container);
         ui->tableView->setModel(model);
     } else if (requestObject["requestType"] == "addDevice") {
         QJsonObject response = responseDoc.object();
@@ -174,7 +171,7 @@ void MainWindow::on_buttonDelete_clicked()
 }
 
 
-void MainWindow::on_buttonAdd_2_clicked()
+void MainWindow::on_buttonHistory_clicked()
 {
     showHistoryForm *form = new showHistoryForm(client, this);
     form->exec();
@@ -215,7 +212,7 @@ void MainWindow::on_buttonExport_clicked()
 }
 
 
-void MainWindow::on_buttonAdd_3_clicked() {
+void MainWindow::on_buttonImport_clicked() {
     QMessageBox::StandardButton reply = QMessageBox::critical(this, "Внимание", "Это действие удалит существующие данные", QMessageBox::Ok | QMessageBox::No);
     if (reply != QMessageBox::Ok) {
         return;
@@ -266,7 +263,7 @@ void MainWindow::on_buttonAdd_3_clicked() {
 }
 
 
-void MainWindow::on_buttonExport_2_clicked()
+void MainWindow::on_buttonPrint_clicked()
 {
     QString fileName = QFileDialog::getSaveFileName(this,
         "Выберите файл",
@@ -399,3 +396,5 @@ QString MainWindow::generateHTMLTable(const std::vector<deviceInfo>& container)
     html += "</table>\n</body>\n</html>";
     return html;
 }
+
+
