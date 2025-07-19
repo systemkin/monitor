@@ -13,9 +13,26 @@ class MONITOR_DB_EXPORT db_repository : QObject
     Q_OBJECT
 public:
 
+    /*!
+     * \brief function to get singleton pointer
+     * \return singletom pointer or NULL if not initialized
+     */
     static db_repository* getInstance();
 
-    db_repository();
+    /*!
+     * \brief function to (re)create singleton pointer
+     * \return singletom pointer or NULL if not initialized
+     */
+    static db_repository* getInstance(const QString& host, const QString& name, const QString& username, const QString& password, const int port, QObject *parent = nullptr);
+
+    /*!
+     * \brief function to delete singleton pointer
+     */
+    static void deleteInstance();
+
+
+    ~db_repository();
+
     /*!
      * \brief function for viewing log of devices sates
      * \param requestObject - JSON object that can specify "low" and "high" - dates in ISO format used for filtering. Filed "state" ca be used for tthe same purpose
@@ -61,7 +78,10 @@ public:
 
 private:
 
+    MonitorDB *dbm;
     static db_repository* instance;
+
+    db_repository(const QString& host, const QString& name, const QString& username, const QString& password, const int port, QObject *parent = nullptr);
 };
 
 #endif // DB_REPOSITORY_H

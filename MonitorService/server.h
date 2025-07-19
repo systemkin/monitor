@@ -32,7 +32,6 @@ public:
     QThread* serviceThread;
     Service* service;
 
-    MonitorDB* dbm;
     Config config;
 };
 

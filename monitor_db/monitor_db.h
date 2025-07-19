@@ -27,21 +27,18 @@ class MONITOR_DB_EXPORT MonitorDB : public QObject
 public:
 
     /*!
-     * \brief initialize singleton
+     * \brief constructor
      * \param host - db host adress
      * \param name - db name
      * \param username - db username
      * \param password - db password
      * \param port - dp port
-     * \return singleton pointer
+     * \param parent
      */
-    static MonitorDB* initialize(const QString& host, const QString& name, const QString& username, const QString& password, const int port);
+    explicit MonitorDB(const QString& host, const QString& name, const QString& username, const QString& password, const int port, QObject *parent = nullptr);
 
-    /*!
-     * \brief function to get singleton pointer
-     * \return singletom pointer, if exists, otherwise NULL
-     */
-    static MonitorDB* getInstance();
+    ~MonitorDB();
+
 
     /*!
      * \brief function to execure query
@@ -52,21 +49,6 @@ public:
     QJsonObject executeQuery(const QString& query, const QVariantList& params = QVariantList());
 
 private:
-
-    /*!
-     * \brief constructor
-     * \param host - db host adress
-     * \param name - db name
-     * \param username - db username
-     * \param password - db password
-     * \param port - dp port
-     * \param parent
-     */
-    explicit MonitorDB(const QString& host, const QString& name, const QString& username, const QString& password, const int port, QObject *parent = nullptr);
-    ~MonitorDB();
-
-    static QMutex instanceMutex;
-    static MonitorDB* instance;
 
     QMutex dbMutex;
     QSqlDatabase dbConnection;

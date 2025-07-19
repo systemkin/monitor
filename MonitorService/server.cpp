@@ -1,14 +1,14 @@
 #include "server.h"
 #include "configreader.h"
 #include <monitor_db.h>
-
+#include "db_repository.h"
 #include <QDomDocument>
 
 Server::Server(QObject *parent) : QObject(parent) {
 
     configReader reader = configReader();
     config = reader.get("/home/alexej/monitor/configService.xml");
-    dbm = MonitorDB::initialize(config.database.host, config.database.name, config.database.username, config.database.password, config.database.port);
+    db_repository::getInstance(config.database.host, config.database.name, config.database.username, config.database.password, config.database.port);
 
     QFile* file = new QFile(config.control.file);
     if (!file->open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -20,7 +20,7 @@ Server::Server(QObject *parent) : QObject(parent) {
     delete file;
 
 
-    refresherThread = new QThread(nullptr);
+    refresherThread = new QThread(this);
     refresher = new Refresher(config.control.file, config.control.bash, nullptr);
     refresher->moveToThread(refresherThread);
 
@@ -32,13 +32,14 @@ Server::Server(QObject *parent) : QObject(parent) {
 
     refresherThread->start();
 
-    serviceThread = new QThread();
+    serviceThread = new QThread(this);
     service = new Service(nullptr);
     service->listen(QHostAddress::Any, 12345);
     service->moveToThread(serviceThread);
     serviceThread->start();
 }
 Server::~Server(){
-    delete serviceThread;
-    delete refresherThread;
+    delete refresher;
+    delete service;
+    db_repository::deleteInstance();
 }

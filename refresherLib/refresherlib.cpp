@@ -15,7 +15,6 @@ Refresher::Refresher(QString dataPath, QString bashPath,QObject* parent)
 Refresher::~Refresher()
 {
     stop();
-    timer->deleteLater();
 }
 void Refresher::start(int time)
 {

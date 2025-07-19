@@ -22,7 +22,7 @@ struct historyItem {
             jsonHistoryItem.value("name").toString(),
             intToState(jsonHistoryItem.value("prev_state").toInt()),
             intToState(jsonHistoryItem.value("new_state").toInt()),
-            jsonHistoryItem.value("dateTime").toString(),
+            jsonHistoryItem.value("time").toString(),
         });
     }
 };
