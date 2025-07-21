@@ -66,7 +66,7 @@ Config configReader::get(QString configFile) {
     bool ok;
     result.database.port = portElem.text().toInt(&ok);
     if (!ok) {
-        qDebug() << "Invalid field 'connection.port in file";
+        qDebug() << "Invalid field 'connection.port' in file";
         return result;
     }
 
@@ -103,6 +103,17 @@ Config configReader::get(QString configFile) {
         result.control.time = timeElem.text().toInt();
     } else {
         qDebug() << "No field 'control.time' in file";
+        return result;
+    }
+    QDomElement server = root.firstChildElement("server");
+    if (server.isNull()) {
+        qDebug() << "No field 'server' in file";
+        return result;
+    }
+    QDomElement portElemServer = server.firstChildElement("port");
+    result.port = portElemServer.text().toInt(&ok);
+    if (!ok) {
+        qDebug() << "Invalid field 'server.port' in file";
         return result;
     }
     return result;

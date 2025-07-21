@@ -29,6 +29,11 @@ struct Control {
 struct Config {
     Database database;
     Control control;
+
+    /*!
+     * \brief port for this server
+     */
+    int port;
 };
 /*!
  * \brief class for readling config of server application

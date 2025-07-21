@@ -11,4 +11,7 @@
 	<bash>/home/alexej/monitor/states.sh</bash>
 	<file>/home/alexej/monitor/data.txt</file>
     </control>
+    <server>
+    <port>12345</port>
+    </server>
 </config>
