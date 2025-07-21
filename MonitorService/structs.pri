@@ -1,5 +1,5 @@
 
-COMMON_ROOT = $$PWD
+COMMON_ROOT = $$PWD/..
 INCLUDEPATH += $$COMMON_ROOT/lib/pri
 HEADERS += \
     $$COMMON_ROOT/lib/pri/deviceInfo.h \
