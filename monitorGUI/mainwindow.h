@@ -84,8 +84,15 @@ private slots:
     void on_buttonImport_clicked();
 
 private:
+    /*!
+     * \brief config of a GUI application
+     */
     Config config;
     Ui::MainWindow *ui;
+
+    /*!
+     * \brief model, that stores data, recieved from server
+     */
     DeviceInfoModel* model;
 
     /*!
@@ -130,6 +137,9 @@ private:
      */
     QString generateHTMLTable(const std::vector<deviceInfo>& container);
 
+    /*!
+     * \brief client for sending and recueving JSON reuqests and responces through TCP
+     */
     tcpClient *client;
 };
 #endif // MAINWINDOW_H

@@ -50,7 +50,14 @@ public:
 
 private:
 
+    /*!
+     * \brief mutex for executing queries
+     */
     QMutex dbMutex;
+
+    /*!
+     * \brief connection to database
+     */
     QSqlDatabase dbConnection;
 };
 

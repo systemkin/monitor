@@ -36,43 +36,9 @@ QVariant showHistoryModel::data(const QModelIndex &index, int role) const {
             return QString(container[index.row()].name);
             break;
         case 2:
-            switch(container[index.row()].prev_state) {
-            case State::Undefined:
-                return QString("Неизвестно");
-                break;
-            case State::NotWorking:
-                return QString("Не работает");
-                break;
-            case State::Failure:
-                return QString("Авария");
-                break;
-            case State::Working:
-                return QString("Работает");
-                break;
-            default:
-                return QString("Неизвестно");
-                break;
-            }
-            break;
+            return stateToString(container[index.row()].prev_state);
         case 3:
-            switch(container[index.row()].new_state) {
-            case State::Undefined:
-                return QString("Неизвестно");
-                break;
-            case State::NotWorking:
-                return QString("Не работает");
-                break;
-            case State::Failure:
-                return QString("Авария");
-                break;
-            case State::Working:
-                return QString("Работает");
-                break;
-            default:
-                return QString("Неизвестно");
-                break;
-            }
-            break;
+            return stateToString(container[index.row()].new_state);
         case 4:
             return QString(container[index.row()].dateTime);
             break;

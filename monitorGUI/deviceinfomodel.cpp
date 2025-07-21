@@ -47,21 +47,7 @@ QVariant DeviceInfoModel::data(const QModelIndex &index, int role) const {
             else return QString("Файл");
             break;
         case 5:
-            switch(container[index.row()].state) {
-            case State::Undefined:
-                return QString("Неизвестно");
-                break;
-            case State::NotWorking:
-                return QString("Не работает");
-                break;
-            case State::Failure:
-                return QString("Авария");
-                break;
-            case State::Working:
-                return QString("Работает");
-                break;
-            }
-            break;
+            return stateToString(container[index.row()].state);
         }
     }
     if ((role == Qt::ForegroundRole) && (index.column() == 5))  {

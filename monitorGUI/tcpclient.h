@@ -23,8 +23,19 @@ public:
      */
     void makeJsonRequest(QJsonObject requestObject);
 private:
+    /*!
+     * \brief tcp server host
+     */
     QString host;
+
+    /*!
+     * \brief tcp server port
+     */
     int port;
+
+    /*!
+     * \brief mutex for making connection
+     */
     QMutex connectionMutex;
 signals:
     /*!
@@ -33,6 +44,7 @@ signals:
      * \param responseDoc - JSON document response from server
      */
     void requestCompleted(const QJsonObject &requestObject, const QJsonDocument &responseDoc);
+
     /*!
      * \brief signal which is emitted on connection errors. Usually disconnections or when client cant establist connection
      */

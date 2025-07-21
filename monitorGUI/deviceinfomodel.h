@@ -21,8 +21,19 @@ class DeviceInfoModel : public QAbstractTableModel
 {
     Q_OBJECT
 private:
+    /*!
+     * \brief container, that stores data of a model
+     */
     std::vector<deviceInfo> container;
+
+    /*!
+     * \brief amount of rows of a table
+     */
     int rows;
+
+    /*!
+     * \brief amount of columns of a table
+     */
     int columns;
 public:
     DeviceInfoModel();

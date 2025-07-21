@@ -17,11 +17,11 @@ inline int stateToInt(State value) {
 }
 inline QString stateToString(State value) {
     switch(value) {
-    case State::Undefined:  return "Неопределено";
+    case State::Undefined:  return "Неизвестно";
     case State::NotWorking: return "Не работает";
     case State::Failure:    return "Авария";
     case State::Working:    return "Работает";
-    default:                return "Неопределено";
+    default:                return "Неизвестно";
     }
 }
 

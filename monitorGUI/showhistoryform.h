@@ -16,7 +16,7 @@ class showHistoryForm : public QDialog
 
 public:
     /*!
-     * \brief construcor
+     * \brief constructor
      * \param client - tcpClient to be used for conenction with server
      * \param parent
      */
@@ -37,15 +37,18 @@ private slots:
 private:
 
     Ui::showHistoryForm *ui;
+
+    /*!
+     * \brief model for showing data in a table
+     */
+    showHistoryModel* model;
+
     /*!
      * \brief functiion to serve completed tcp requests
      * \param requestObject - obect used to generate request
      * \param responseDoc - response from server
      */
     void onRequestCompleted(const QJsonObject &requestObject, const QJsonDocument &responseDoc);
-    std::vector<historyItem> container;
-    showHistoryModel* model;
-
     /*!
      * \brief function for saving vector of historyItem to different data formats
      * \param container - data to save
@@ -88,6 +91,9 @@ private:
      */
     QString generateHTMLTable(const std::vector<historyItem>& container);
 
+    /*!
+     * \brief client for sending and recueving JSON reuqests and responces through TCP
+     */
     tcpClient *client;
 };
 

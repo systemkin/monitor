@@ -16,11 +16,7 @@ showHistoryForm::showHistoryForm(tcpClient *client, MainWindow *parent)
     ui->setupUi(this);
     model = new showHistoryModel;
     ui->tableView->setModel(new showHistoryModel);
-    ui->tableView->setColumnWidth(0, 170);
-    ui->tableView->setColumnWidth(1, 170);
-    ui->tableView->setColumnWidth(2, 200);
-    ui->tableView->setColumnWidth(3, 200);
-    ui->tableView->setColumnWidth(4, 300);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->comboBox->addItems({"Неизвестно", "Не работает", "Авария", "Работает"});
 
     connect(client, &tcpClient::requestCompleted,

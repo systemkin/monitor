@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableView->setModel(model);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
-    ui->tableView->setColumnWidth(1, 200);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
 
 

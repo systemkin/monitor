@@ -77,8 +77,14 @@ public:
     QJsonObject updateState(int id, State state);
 
 private:
-
+    /*!
+     * \brief pointer to instance of MonitorDB for db queries
+     */
     MonitorDB *dbm;
+
+    /*!
+     * \brief singleton instance
+     */
     static db_repository* instance;
 
     db_repository(const QString& host, const QString& name, const QString& username, const QString& password, const int port, QObject *parent = nullptr);

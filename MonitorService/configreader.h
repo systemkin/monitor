@@ -9,9 +9,21 @@ struct Database{
     QString password = "";
     int port = 0;
 };
-struct Control{
+struct Control {
+
+    /*!
+     * \brief time in miliseconds between refreshes
+     */
     int time = 0;
+
+    /*!
+     * \brief path to bash script
+     */
     QString bash = "";
+
+    /*!
+     * \brief path to file with states
+     */
     QString file = "";
 };
 struct Config {

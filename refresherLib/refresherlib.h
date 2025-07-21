@@ -33,12 +33,25 @@ public:
     ~Refresher();
 
 private slots:
+    /*!
+     * \brief function, called on timer to refresh states on db for tracking devices
+     */
     void refreshStates();
 
 private:
+    /*!
+     * \brief time in miliseconds between refreshes
+     */
     QTimer* timer;
 
+    /*!
+     * \brief path to file with states
+     */
     QString dataPath;
+
+    /*!
+     * \brief path to bash script
+     */
     QString bashPath;
 
     /*!
