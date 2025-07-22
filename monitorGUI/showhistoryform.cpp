@@ -38,7 +38,7 @@ void showHistoryForm::onRequestCompleted(const QJsonObject &requestObject, const
         int i = 0;
         for (const QJsonValue &value : std::as_const(responseArray)) {
 
-            historyItem historyItem = historyItem::fromJson(value.toObject());
+            historyItem historyItem(value.toObject());
             container[i++] = historyItem;
 
         }

@@ -32,12 +32,14 @@ void Service::onNewConnection() {
             if (requestObject["requestType"] == "getStates") {
                 QJsonObject result = db_repository::getInstance()->getStates();
                 QJsonDocument responseDoc(result);
+                qDebug() << "responded: " << result;
                 respond(clientSocket, responseDoc);
 
             } else if (requestObject["requestType"] == "addDevice") {
                 device device(requestObject["requestData"].toObject());
                 QJsonObject result = db_repository::getInstance()->addDevice(device);
                 QJsonDocument responseDoc(result);
+                qDebug() << "responded: " << result;
                 respond(clientSocket, responseDoc);
 
             } else if (requestObject["requestType"] == "editDevice") {
@@ -46,6 +48,7 @@ void Service::onNewConnection() {
                 device device(requestData.value("device").toObject());
                 QJsonObject result = db_repository::getInstance()->editDevice(id, device);
                 QJsonDocument responseDoc(result);
+                qDebug() << "responded: " << result;
                 respond(clientSocket, responseDoc);
 
             } else if (requestObject["requestType"] == "changeDevices") {
@@ -56,11 +59,13 @@ void Service::onNewConnection() {
                     devices[i++] = device(value.toObject());
                 }
                 QJsonObject result = db_repository::getInstance()->changeDevices(devices);
+                qDebug() << "responded: " << result;
                 respond(clientSocket, QJsonDocument(result));
 
             } else if (requestObject["requestType"] == "showHistory") {
                 QJsonObject logRequestObject = requestObject;
                 QJsonObject result = db_repository::getInstance()->getLog(logRequestObject);
+                qDebug() << "responded: " << result;
                 QJsonDocument responseDoc(result);
                 respond(clientSocket, responseDoc);
 
@@ -69,6 +74,7 @@ void Service::onNewConnection() {
                 int id = requestData["id"].toInt();
                 QJsonObject result = db_repository::getInstance()->deleteDevice(id);
                 QJsonDocument responseDoc(result);
+                qDebug() << "responded: " << result;
                 respond(clientSocket, responseDoc);
             }
         }

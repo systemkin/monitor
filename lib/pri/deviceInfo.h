@@ -13,7 +13,7 @@ struct deviceInfo {
     bool type;
     State state;
     deviceInfo() {
-        id = -1;
+        id = 0;
         serial = "";
         name = "";
         description = "";
@@ -31,14 +31,36 @@ struct deviceInfo {
      */
 
     deviceInfo(QJsonObject jsonDeviceInfo) {
-
         id = jsonDeviceInfo.value("id").toInt();
-        serial = jsonDeviceInfo.value("serial").toString();
+        serial = jsonDeviceInfo.value("number").toString();
         name = jsonDeviceInfo.value("name").toString();
         description = jsonDeviceInfo.value("description").toString();
         type = jsonDeviceInfo.value("type").toBool();
         state = intToState(jsonDeviceInfo.value("state").toInt());
     }
+
+    static deviceInfo fromDbJson(QJsonObject jsonDeviceInfo) {
+        deviceInfo deviceInfo;
+        deviceInfo.id = jsonDeviceInfo.value("id").toInt();
+        deviceInfo.serial = jsonDeviceInfo.value("serial").toString();
+        deviceInfo.name = jsonDeviceInfo.value("name").toString();
+        deviceInfo.description = jsonDeviceInfo.value("description").toString();
+        deviceInfo.type = jsonDeviceInfo.value("type").toBool();
+        deviceInfo.state = intToState(jsonDeviceInfo.value("state").toInt());
+        return deviceInfo;
+    }
+
+    QJsonObject toJson() {
+        QJsonObject deviceInfoJson;
+        deviceInfoJson["id"] = id;
+        deviceInfoJson["number"] = serial;
+        deviceInfoJson["name"] = name;
+        deviceInfoJson["description"] = description;
+        deviceInfoJson["state"] = stateToInt(state);
+        return deviceInfoJson;
+    }
+
+
     /*!
      * \brief creates QString representation of a device for export to text files
      * \return QString representation of a device

@@ -1,4 +1,7 @@
 #include "db_repository.h"
+#include "historyItem.h"
+#include "deviceInfo.h"
+
 db_repository* db_repository::instance = nullptr;
 db_repository* db_repository::getInstance(const QString& host, const QString& name, const QString& username, const QString& password, const int port, QObject *parent) {
     if (instance != NULL) delete instance;
@@ -57,20 +60,46 @@ QJsonObject db_repository::getLog(QJsonObject requestObject) {
         response["status"] = "fail";
     } else {
         response["status"] = "success";
-        response["data"] = result["data"];
+        QJsonArray itemsJson = result["data"].toArray();
+        std::vector<historyItem> items(itemsJson.size());
+        int i = 0;
+        for (const QJsonValue &value : std::as_const(itemsJson)) {
+            items[i++] = historyItem::fromDbJson(value.toObject());
+        }
+
+        QJsonArray responseData;
+        for (historyItem &value : items) {
+            responseData.append(value.toJson());
+        }
+        response["data"] = responseData;
 
     }
-
     return response;
 }
 
 QJsonObject db_repository::getStates() {
-
+    QJsonObject response;
     QJsonObject result = dbm->executeQuery("SELECT devices.serial, devices.name, devices.description, devices.type, states.state, devices.id FROM states INNER JOIN devices ON devices.id = device_id");
     if (result["status"] != "success") {
+        response["status"] = "fail";
         qDebug() << "Can not execute query. message: " << result["message"];
+        return response;
     }
-    return result;
+    response["status"] = "success";
+    QJsonArray itemsJson = result["data"].toArray();
+    std::vector<deviceInfo> items(itemsJson.size());
+    int i = 0;
+    for (const QJsonValue &value : std::as_const(itemsJson)) {
+        deviceInfo device = deviceInfo::fromDbJson(value.toObject());
+        items[i++] = deviceInfo::fromDbJson(value.toObject());
+    }
+
+    QJsonArray responseData;
+    for (deviceInfo &value : items) {
+        responseData.append(value.toJson());
+    }
+    response["data"] = responseData;
+    return response;
 }
 
 QJsonObject db_repository::addDevice(device device) {
@@ -92,7 +121,10 @@ QJsonObject db_repository::addDevice(device device) {
     if (insertResult["status"] != "success") {
         qDebug() << "Can not execute query. message: " << insertResult["message"];
     }
-    return insertResult;
+    QJsonObject response;
+    response["status"] = "success";
+    response["rowsAffected"] = insertResult["rowsAffected"];
+    return response;
 }
 
 QJsonObject db_repository::editDevice(int id, device device) {
@@ -113,7 +145,11 @@ QJsonObject db_repository::editDevice(int id, device device) {
     if (updateResult["status"] != "success") {
         qDebug() << "Can not execute query. message: " << updateResult["message"];
     }
-    return updateResult;
+    QJsonObject response;
+    response["status"] = "success";
+    response["rowsAffected"] = updateResult["rowsAffected"];
+    return response;
+
 
 }
 
@@ -132,14 +168,11 @@ QJsonObject db_repository::deleteDevice(int id) {
         return response;
     }
     response["status"] = "success";
-
+    response["rowsAffected"] = result["rowsAffected"];
     return response;
 }
 
 QJsonObject db_repository::changeDevices(std::vector<device> devices) {
-    QJsonObject response;
-
-
     QJsonObject result = dbm->executeQuery("DELETE FROM devices");
     if (result["status"] != "success") {
         qDebug() << "Can not execute query. message: " << result["message"];
@@ -154,6 +187,7 @@ QJsonObject db_repository::changeDevices(std::vector<device> devices) {
         }
 
     }
+    QJsonObject response;
     response["status"] = "success";
     return response;
 }
@@ -163,5 +197,8 @@ QJsonObject db_repository::updateState(int id, State state) {
     if (updateResult["status"] != "success") {
         qDebug() << "Can not execute query. message: " << updateResult["message"];
     }
-    return updateResult;
+    QJsonObject response;
+    response["status"] = "success";
+    response["rowsAffected"] = updateResult["rowsAffected"];
+    return response;
 }

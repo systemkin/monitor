@@ -39,6 +39,7 @@ State Refresher::getState(QString serial, bool type)
         QByteArray output = process.readAllStandardOutput();
         bool ok;
         int state = output.trimmed().toInt(&ok);
+
         if (ok) return intToState(state);
         else {
             qDebug() << "Troubles with parsing, probably bash or datafile is not acessible or file data format error";
@@ -77,7 +78,7 @@ void Refresher::refreshStates()
 
     QJsonArray devices = result["data"].toArray();
     for (const QJsonValue& deviceValue : std::as_const(devices)) {
-        deviceInfo device(deviceValue.toObject());
+        deviceInfo device = deviceInfo(deviceValue.toObject());
         State currState = getState(device.serial, device.type);
         if (currState != device.state) {
             device.state = currState;

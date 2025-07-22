@@ -12,6 +12,13 @@ public:
     device();
 
     /*!
+     * \brief function to create device from JSON with db fields
+     * \param deviceJson - JSON representation of device
+     * \return device object
+     */
+    static device fromDbJson(QJsonObject deviceJson);
+
+    /*!
      * \brief - constructor with setting all fields directly
      * \param serial - serial nubmer
      * \param name - device name
