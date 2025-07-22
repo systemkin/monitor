@@ -57,6 +57,7 @@ struct deviceInfo {
         deviceInfoJson["name"] = name;
         deviceInfoJson["description"] = description;
         deviceInfoJson["state"] = stateToInt(state);
+        deviceInfoJson["type"] = type;
         return deviceInfoJson;
     }
 
@@ -78,7 +79,7 @@ struct deviceInfo {
      * \return QString representation of a device
      */
     QString toCSV() const {
-        return QString ("\"" + QString(id) + "\","
+        return QString ("\"" + QString::number(id) + "\","
         + "\"" + serial + "\","
         + "\"" + name + "\","
         + "\"" + description + "\","

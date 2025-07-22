@@ -62,11 +62,13 @@ void showHistoryForm::on_pushButton_request_clicked()
 
 void showHistoryForm::on_pushButton_print_clicked()
 {
+
+    QString selectedFilter;
     QString fileName = QFileDialog::getSaveFileName(this,
-        "Выберите файл",
-        QDir::homePath(),
-        "PDF документ (*.pdf);;Текстовый файл (.txt);;Excel-файл (.csv);;Html-страница (.html)"
-    );
+                                                    "Выберите файл",
+                                                    QDir::homePath(),
+                                                    "PDF документ (*.pdf);;Текстовый файл (*.txt);;Excel-файл (*.csv);;Html-страница (*.html)", &selectedFilter
+                                                    );
     if (fileName.isEmpty()) {
         return;
     }
@@ -76,19 +78,19 @@ void showHistoryForm::on_pushButton_print_clicked()
         return;
     }
 
-    if (fileName.endsWith(".pdf", Qt::CaseInsensitive)) {
-        std::vector<historyItem> cont = model->getContainerCopy();
-        exportToPDF(fileName, cont);
-    } else if (fileName.endsWith(".txt", Qt::CaseInsensitive)) {
+    if (selectedFilter.contains(".pdf", Qt::CaseInsensitive)) {
+        exportToPDF(fileName, model->getContainerCopy());
+    } else if (selectedFilter.contains(".txt", Qt::CaseInsensitive)) {
         exportToText(fileName, model->getContainerCopy());
-    } else if (fileName.endsWith(".csv", Qt::CaseInsensitive)) {
+    } else if (selectedFilter.contains(".csv", Qt::CaseInsensitive)) {
         exportToCSV(fileName, model->getContainerCopy());
-    } else if (fileName.endsWith(".html", Qt::CaseInsensitive)) {
+    } else if (selectedFilter.contains(".html", Qt::CaseInsensitive)) {
         exportToHTML(fileName, model->getContainerCopy());
     } else {
         QMessageBox::warning(this, "Ошибка", "Неизвестный формат файла");
         return;
     }
+
 }
 
 void showHistoryForm::exportToPDF(const QString &fileName, const std::vector<historyItem>& container)

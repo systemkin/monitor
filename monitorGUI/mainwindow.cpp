@@ -181,10 +181,10 @@ void MainWindow::on_buttonHistory_clicked()
 void MainWindow::on_buttonExport_clicked()
 {
     QString fileName = QFileDialog::getSaveFileName(this,
-        "Выберите файл",
-        QDir::homePath(),
-        "Monitor file (*.mof)"
-    );
+                                                    "Выберите файл",
+                                                    QDir::homePath(),
+                                                    "Monitor file (*.mof)"
+                                                    );
 
     if (!fileName.isEmpty()) {
         QFile file(fileName);
@@ -219,10 +219,10 @@ void MainWindow::on_buttonImport_clicked() {
         return;
     }
     QString fileName = QFileDialog::getOpenFileName(this,
-        "Выберите файл",
-        QDir::homePath(),
-        "Monitor file (*.mof)"
-    );
+                                                    "Выберите файл",
+                                                    QDir::homePath(),
+                                                    "Monitor file (*.mof)"
+                                                    );
 
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly)) {
@@ -266,11 +266,12 @@ void MainWindow::on_buttonImport_clicked() {
 
 void MainWindow::on_buttonPrint_clicked()
 {
+    QString selectedFilter;
     QString fileName = QFileDialog::getSaveFileName(this,
-        "Выберите файл",
-        QDir::homePath(),
-        "PDF документ (*.pdf);;Текстовый файл (.txt);;Excel-файл (.csv);;Html-страница (.html)"
-    );
+                                                    "Выберите файл",
+                                                    QDir::homePath(),
+                                                    "PDF документ (*.pdf);;Текстовый файл (*.txt);;Excel-файл (*.csv);;Html-страница (*.html)", &selectedFilter
+                                                    );
     if (fileName.isEmpty()) {
         return;
     }
@@ -280,13 +281,13 @@ void MainWindow::on_buttonPrint_clicked()
         return;
     }
 
-    if (fileName.endsWith(".pdf", Qt::CaseInsensitive)) {
+    if (selectedFilter.contains(".pdf", Qt::CaseInsensitive)) {
         exportToPDF(fileName, model->getContainerCopy());
-    } else if (fileName.endsWith(".txt", Qt::CaseInsensitive)) {
+    } else if (selectedFilter.contains(".txt", Qt::CaseInsensitive)) {
         exportToText(fileName, model->getContainerCopy());
-    } else if (fileName.endsWith(".csv", Qt::CaseInsensitive)) {
+    } else if (selectedFilter.contains(".csv", Qt::CaseInsensitive)) {
         exportToCSV(fileName, model->getContainerCopy());
-    } else if (fileName.endsWith(".html", Qt::CaseInsensitive)) {
+    } else if (selectedFilter.contains(".html", Qt::CaseInsensitive)) {
         exportToHTML(fileName, model->getContainerCopy());
     } else {
         QMessageBox::warning(this, "Ошибка", "Неизвестный формат файла");
